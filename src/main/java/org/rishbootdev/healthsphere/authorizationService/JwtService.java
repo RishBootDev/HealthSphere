@@ -31,6 +31,7 @@ public class JwtService {
 
         System.out.println(token);
         return token;
+
     }
 
     public boolean validateToken(String token) {
