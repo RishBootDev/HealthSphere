@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/pharma")
 @PreAuthorize("hasRole('PHARMA')")
+@CrossOrigin()
 public class PharmaController {
 
     private final PharmaService pharmaService;

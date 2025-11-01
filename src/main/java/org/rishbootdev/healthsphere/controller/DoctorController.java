@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/doctor")
 @PreAuthorize("hasRole('DOCTOR')")
+@CrossOrigin
 public class DoctorController {
 
     private final DoctorService doctorService;
