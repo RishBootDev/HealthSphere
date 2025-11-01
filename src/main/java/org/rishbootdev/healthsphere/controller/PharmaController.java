@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin()
 public class PharmaController {
 
+
     private final PharmaService pharmaService;
 
     public PharmaController(PharmaService pharmaService) {
