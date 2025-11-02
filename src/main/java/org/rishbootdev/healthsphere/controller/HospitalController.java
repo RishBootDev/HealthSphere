@@ -2,6 +2,7 @@ package org.rishbootdev.healthsphere.controller;
 
 
 import org.rishbootdev.healthsphere.dto.DoctorDto;
+import org.rishbootdev.healthsphere.dto.HospitalDto;
 import org.rishbootdev.healthsphere.service.HospitalService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,6 +48,12 @@ public class HospitalController {
     @GetMapping("/records")
     public ResponseEntity<?> getAllRecords() {
         return ResponseEntity.ok(hospitalService.getAllRecords());
+    }
+
+
+    @PostMapping("/registerHospital")
+    public ResponseEntity<String> registerHospital(@RequestBody HospitalDto hospitalDto){
+        return ResponseEntity.ok(hospitalService.registerHospital(hospitalDto));
     }
 
 }

@@ -32,12 +32,12 @@ public class HospitalService {
         }
     }
 
-    public DoctorDto registerDoctor(DoctorDto doctor) {
+    public String registerDoctor(DoctorDto doctor) {
         try {
             Contract contract = fabricGatewayService.getContract();
             String doctorJson = JsonUtils.toJson(doctor);
             contract.submitTransaction("RegisterDoctor", doctorJson);
-            return doctor;
+            return "The Doctor registered successfully to the network owned by the Hospital name "+doctor.getHospital().getName();
         } catch (Exception e) {
             throw new ChainCodeException("Failed to register doctor: "+e.getMessage());
         }

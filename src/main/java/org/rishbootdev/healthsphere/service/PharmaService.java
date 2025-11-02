@@ -67,4 +67,17 @@ public class PharmaService {
             throw new LedgerAccessException(" Unable to fetch prescription: " + e.getMessage());
         }
     }
+    public String addMedicine(MedicineDto medicineDto) {
+        try {
+            Contract contract = fabricGatewayService.getContract();
+            String medicineJson = JsonUtils.toJson(medicineDto);
+            byte[] result = contract.submitTransaction("createMedicine", medicineJson);
+
+            return "Medicine inserted successfully with ID: " + medicineDto.getId() +" and name "+medicineDto.getName();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Failed to insert medicine: " + e.getMessage());
+        }
+    }
 }
