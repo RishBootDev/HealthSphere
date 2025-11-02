@@ -58,7 +58,8 @@ public class FabricGatewayService {
                     .forTarget(peerEndpoint)
                     .usePlaintext()
                     .build();
-            Gateway gateway = Gateway.newInstance()
+            Network network;
+            try (Gateway gateway = Gateway.newInstance()
                     .identity(identity)
                     .signer(signer)
                     .connection(channel)
@@ -66,9 +67,10 @@ public class FabricGatewayService {
                     .endorseOptions(options -> options.withDeadlineAfter(15, TimeUnit.SECONDS))
                     .submitOptions(options -> options.withDeadlineAfter(15, TimeUnit.SECONDS))
                     .commitStatusOptions(options -> options.withDeadlineAfter(1, TimeUnit.MINUTES))
-                    .connect();
+                    .connect()) {
 
-            Network network = gateway.getNetwork(channelName);
+                network = gateway.getNetwork(channelName);
+            }
             return network.getContract(chaincodeName);
 
         } catch (Exception e) {

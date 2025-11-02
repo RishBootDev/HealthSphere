@@ -12,7 +12,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>org.HimanshuTech</groupId>
+    <groupId>org.rishbootdev</groupId>
     <artifactId>HealthSphere</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>HealthSphere</name>
@@ -22,10 +22,11 @@
         <java.version>21</java.version>
         <fabric.sdk.version>2.2.20</fabric.sdk.version>
         <fabric.gateway.version>1.7.1</fabric.gateway.version>
-        <protobuf.version>3.25.3</protobuf.version>
+        <protobuf.version>4.28.2</protobuf.version>
     </properties>
 
     <dependencies>
+
         <!-- Spring Boot Starters -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -67,21 +68,33 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Hyperledger Fabric SDK (core) -->
+        <!-- Hyperledger Fabric SDK -->
         <dependency>
             <groupId>org.hyperledger.fabric-sdk-java</groupId>
             <artifactId>fabric-sdk-java</artifactId>
             <version>${fabric.sdk.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.protobuf</groupId>
+                    <artifactId>protobuf-java</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-        <!-- Hyperledger Fabric Gateway (modern API) -->
+        <!-- Hyperledger Fabric Gateway -->
         <dependency>
             <groupId>org.hyperledger.fabric</groupId>
             <artifactId>fabric-gateway</artifactId>
             <version>${fabric.gateway.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>com.google.protobuf</groupId>
+                    <artifactId>protobuf-java</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
-        <!-- Force compatible Protobuf version -->
+        <!--Compatible Protobuf 4.28.2 -->
         <dependency>
             <groupId>com.google.protobuf</groupId>
             <artifactId>protobuf-java</artifactId>
