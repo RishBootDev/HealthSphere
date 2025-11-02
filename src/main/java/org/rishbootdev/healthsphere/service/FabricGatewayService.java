@@ -1,65 +1,89 @@
 package org.rishbootdev.healthsphere.service;
 
 import io.grpc.ManagedChannel;
+import io.grpc.netty.shaded.io.grpc.netty.GrpcSslContexts;
+import io.grpc.netty.shaded.io.grpc.netty.NettyChannelBuilder;
 import org.hyperledger.fabric.client.*;
 import org.hyperledger.fabric.client.identity.*;
 import org.rishbootdev.healthsphere.exception.NetworkConnectionException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import jakarta.annotation.PreDestroy;
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 @Service
 public class FabricGatewayService {
 
-    @Value("${fabric.certificate-path:./msp/signcerts/cert.pem}")
+    @Value("${fabric.certificate-path}")
     private String certificatePath;
 
-    @Value("${fabric.private-key-path:./msp/keystore/priv_sk}")
-    private String privateKeyPath;
+    @Value("${fabric.private-key-dir}")
+    private String privateKeyDir;
 
     @Value("${fabric.msp-id:Org1MSP}")
     private String mspId;
 
-    @Value("${fabric.connection-profile:./connection-org1.json}")
-    private String networkConfigPath;
-
     @Value("${fabric.peer-endpoint:localhost:7051}")
     private String peerEndpoint;
+
+    @Value("${fabric.tls-cert-path}")
+    private String tlsCertPath;
 
     @Value("${fabric.channel:healthchannel}")
     private String channelName;
 
-    @Value("${fabric.chaincode:healthspherecc}")
+    @Value("${fabric.chaincode:healthsphere}")
     private String chaincodeName;
 
-    public Contract getContract() {
-        try {
-            System.out.println("Certification Path");
-            Path certPath = Paths.get(certificatePath);
-            System.out.println("Passed");
-            Path keyPath = Paths.get(privateKeyPath);
-            System.out.println("Passed");
+    private Gateway gateway;
+    private ManagedChannel channel;
 
+    public synchronized Contract getContract() {
+        try {
+            if (gateway != null) {
+                Network network = gateway.getNetwork(channelName);
+                return network.getContract(chaincodeName);
+            }
+
+            Path certPath = Paths.get(certificatePath);
             X509Certificate certificate = Identities.readX509Certificate(Files.newBufferedReader(certPath));
-            System.out.println("Passed");
+
+            Path keyDir = Paths.get(privateKeyDir);
+            Path keyPath;
+            try (Stream<Path> list = Files.list(keyDir)) {
+                keyPath = list
+                        .filter(p -> {
+                            String n = p.getFileName().toString();
+                            return n.endsWith("_sk") || n.endsWith(".pem") || n.endsWith(".key");
+                        })
+                        .findFirst()
+                        .orElseThrow(() -> new IllegalStateException("No private key found in " + privateKeyDir));
+            }
+
             PrivateKey privateKey = Identities.readPrivateKey(Files.newBufferedReader(keyPath));
 
             Identity identity = new X509Identity(mspId, certificate);
             Signer signer = Signers.newPrivateKeySigner(privateKey);
 
-            ManagedChannel channel = io.grpc.ManagedChannelBuilder
-                    .forTarget(peerEndpoint)
-                    .usePlaintext()
+            File tlsCertFile = new File(tlsCertPath);
+            String[] parts = peerEndpoint.split(":", 2);
+            String host = parts[0];
+            int port = Integer.parseInt(parts[1]);
+
+            channel = NettyChannelBuilder.forAddress(host, port)
+                    .sslContext(GrpcSslContexts.forClient().trustManager(tlsCertFile).build())
+                    .overrideAuthority("peer0.org1.example.com")
                     .build();
-            Network network;
-            try (Gateway gateway = Gateway.newInstance()
+
+            gateway = Gateway.newInstance()
                     .identity(identity)
                     .signer(signer)
                     .connection(channel)
@@ -67,14 +91,28 @@ public class FabricGatewayService {
                     .endorseOptions(options -> options.withDeadlineAfter(15, TimeUnit.SECONDS))
                     .submitOptions(options -> options.withDeadlineAfter(15, TimeUnit.SECONDS))
                     .commitStatusOptions(options -> options.withDeadlineAfter(1, TimeUnit.MINUTES))
-                    .connect()) {
+                    .connect();
 
-                network = gateway.getNetwork(channelName);
-            }
+            Network network = gateway.getNetwork(channelName);
             return network.getContract(chaincodeName);
 
         } catch (Exception e) {
-            throw new NetworkConnectionException("unable to connect the fiber network");
+            e.printStackTrace();
+            throw new NetworkConnectionException("Unable to connect to the Fabric network: " + e.getMessage());
+        }
+    }
+
+    @PreDestroy
+    public void close() {
+        try {
+            if (gateway != null) {
+                gateway.close();
+            }
+            if (channel != null) {
+                channel.shutdownNow();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

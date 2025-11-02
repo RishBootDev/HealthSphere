@@ -21,8 +21,8 @@ public class HospitalController {
     }
 
     @PostMapping("/doctor")
-    public ResponseEntity<?> registerDoctor(@RequestBody DoctorDto doctor,@PathVariable String hospitalId) {
-        return ResponseEntity.ok(hospitalService.registerDoctor(doctor,hospitalId));
+    public ResponseEntity<?> registerDoctor(@RequestBody DoctorDto doctor) {
+        return ResponseEntity.ok(hospitalService.registerDoctor(doctor,"HSP001"));
     }
 
     @GetMapping("/doctors")

@@ -59,7 +59,7 @@ public class DoctorService {
     public List<PatientDto> getPatients() {
         try {
             Contract contract = fabricGatewayService.getContract();
-            byte[] result = contract.evaluateTransaction("GetAllPatients");
+            byte[] result = contract.evaluateTransaction("GetPatientsByDoctor","DC001");
             return JsonUtils.fromJsonList(new String(result), PatientDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Unable to fetch patients: " + e.getMessage());
