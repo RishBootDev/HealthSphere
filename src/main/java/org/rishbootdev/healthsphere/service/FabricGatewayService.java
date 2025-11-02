@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import jakarta.security.*;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 
 @Service
 public class FabricGatewayService {
@@ -40,11 +42,14 @@ public class FabricGatewayService {
 
     public Contract getContract() {
         try {
-
+            System.out.println("Certification Path");
             Path certPath = Paths.get(certificatePath);
+            System.out.println("Passed");
             Path keyPath = Paths.get(privateKeyPath);
+            System.out.println("Passed");
 
             X509Certificate certificate = Identities.readX509Certificate(Files.newBufferedReader(certPath));
+            System.out.println("Passed");
             PrivateKey privateKey = Identities.readPrivateKey(Files.newBufferedReader(keyPath));
 
             Identity identity = new X509Identity(mspId, certificate);
@@ -54,8 +59,6 @@ public class FabricGatewayService {
                     .forTarget(peerEndpoint)
                     .usePlaintext()
                     .build();
-
-
             Gateway gateway = Gateway.newInstance()
                     .identity(identity)
                     .signer(signer)

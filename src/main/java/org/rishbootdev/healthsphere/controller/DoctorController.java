@@ -20,12 +20,13 @@ public class DoctorController {
     }
 
     @PostMapping("/patient")
-    public ResponseEntity<?> createPatientRecord(@RequestBody RecordDto record) {
+    public ResponseEntity<RecordDto> createPatientRecord(@RequestBody RecordDto record) {
         return ResponseEntity.ok(doctorService.createRecord(record));
     }
 
     @PutMapping("/patient/{recordId}")
-    public ResponseEntity<?> updatePatientRecord(@PathVariable String recordId, @RequestBody RecordDto record) {
+    public ResponseEntity<String> updatePatientRecord(@PathVariable String recordId,
+                                                      @RequestBody RecordDto record) {
         return ResponseEntity.ok(doctorService.updatePatientRecord(recordId, record));
     }
 
@@ -48,5 +49,4 @@ public class DoctorController {
     public ResponseEntity<?> searchRecords(@RequestParam String keyword) {
         return ResponseEntity.ok(doctorService.searchRecords(keyword));
     }
-
 }

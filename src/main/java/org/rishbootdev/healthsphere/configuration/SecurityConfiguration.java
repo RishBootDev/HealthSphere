@@ -69,7 +69,6 @@ public class SecurityConfiguration {
         return source;
     }
 
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

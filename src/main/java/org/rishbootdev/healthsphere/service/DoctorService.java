@@ -23,19 +23,15 @@ public class DoctorService {
     public RecordDto createRecord(RecordDto record) {
         try {
             Contract contract = fabricGatewayService.getContract();
-            contract.submitTransaction("CreateRecord",
-                    record.getRecordId(),
-                    record.getPatient().getPatientId(),
-                    record.getDoctor().getDoctorId(),
-                    record.getDiagnosis(),
-                    record.getTreatment(),
-                    record.getVisitDate(),
-                    record.getRemarks());
+            String recordJson = JsonUtils.toJson(record);
+            contract.submitTransaction("createPatientRecord", recordJson);
+
             return record;
         } catch (Exception e) {
             throw new ChainCodeException("Failed to create record: " + e.getMessage());
         }
     }
+
 
 
     public List<PatientDto> getDoctorPatients(String doctorId) {
@@ -50,7 +46,9 @@ public class DoctorService {
 
     public List<RecordDto> searchRecords(String keyword) {
         try {
+            System.out.println("Trying to get the contract");
             Contract contract = fabricGatewayService.getContract();
+            System.out.println("we got the contract");
             byte[] result = contract.evaluateTransaction("SearchRecords", keyword);
             return JsonUtils.fromJsonList(new String(result), RecordDto.class);
         } catch (Exception e) {
