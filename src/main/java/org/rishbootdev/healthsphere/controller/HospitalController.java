@@ -21,8 +21,8 @@ public class HospitalController {
     }
 
     @PostMapping("/doctor")
-    public ResponseEntity<?> registerDoctor(@RequestBody DoctorDto doctor) {
-        return ResponseEntity.ok(hospitalService.registerDoctor(doctor));
+    public ResponseEntity<?> registerDoctor(@RequestBody DoctorDto doctor,@PathVariable String hospitalId) {
+        return ResponseEntity.ok(hospitalService.registerDoctor(doctor,hospitalId));
     }
 
     @GetMapping("/doctors")
@@ -55,5 +55,4 @@ public class HospitalController {
     public ResponseEntity<String> registerHospital(@RequestBody HospitalDto hospitalDto){
         return ResponseEntity.ok(hospitalService.registerHospital(hospitalDto));
     }
-
 }

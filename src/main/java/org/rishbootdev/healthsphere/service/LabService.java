@@ -21,10 +21,8 @@ public class LabService {
     public LabReportDto uploadReport(LabReportDto report) {
         try {
             Contract contract = fabricGatewayService.getContract();
-
             String reportJson = JsonUtils.toJson(report);
-
-            contract.submitTransaction("CreateLabReport", reportJson);
+            contract.submitTransaction("createLabReport", reportJson);
 
             return report;
         } catch (Exception e) {
@@ -36,7 +34,7 @@ public class LabService {
         try {
             Contract contract = fabricGatewayService.getContract();
 
-            byte[] result = contract.evaluateTransaction("GetReportsByPatientId", patientId);
+            byte[] result = contract.evaluateTransaction("getReportsByPatientId", patientId);
 
             return JsonUtils.fromJsonList(new String(result), LabReportDto.class);
         } catch (Exception e) {
@@ -48,7 +46,7 @@ public class LabService {
         try {
             Contract contract = fabricGatewayService.getContract();
 
-            byte[] result = contract.evaluateTransaction("GetReportsByLab", labId);
+            byte[] result = contract.evaluateTransaction("getReportsByLab", labId);
 
             return JsonUtils.fromJsonList(new String(result), LabReportDto.class);
         } catch (Exception e) {

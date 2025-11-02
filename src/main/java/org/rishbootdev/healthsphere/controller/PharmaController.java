@@ -1,6 +1,7 @@
 package org.rishbootdev.healthsphere.controller;
 
 
+import org.rishbootdev.healthsphere.dto.MedicineDto;
 import org.rishbootdev.healthsphere.service.PharmaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,16 +13,14 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin()
 public class PharmaController {
 
-
     private final PharmaService pharmaService;
 
     public PharmaController(PharmaService pharmaService) {
         this.pharmaService = pharmaService;
     }
-
     @GetMapping("/prescription/{patientId}")
     public ResponseEntity<?> getPrescription(@PathVariable String patientId) {
-        return ResponseEntity.ok(pharmaService.getPrescription(patientId));
+        return ResponseEntity.ok(pharmaService.getPrescriptionByPatient(patientId));
     }
 
     @PutMapping("/stock/{medicineId}")
@@ -39,5 +38,9 @@ public class PharmaController {
         return ResponseEntity.ok(pharmaService.searchMedicineByName(name));
     }
 
+    @PostMapping("/addmedicine")
+    public ResponseEntity<String> addMedicine(MedicineDto medicineDto){
+        return ResponseEntity.ok(pharmaService.addMedicine(medicineDto));
+    }
 }
 

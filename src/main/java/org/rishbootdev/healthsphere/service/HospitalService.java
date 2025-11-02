@@ -25,19 +25,19 @@ public class HospitalService {
         try {
             Contract contract = fabricGatewayService.getContract();
             String hospitalJson = JsonUtils.toJson(hospitalDto);
-            contract.submitTransaction("CreateHospital", hospitalJson);
+            contract.submitTransaction("createHospital", hospitalJson);
             return "Hospital registered successfully with ID: "+hospitalDto.getHospitalId();
         } catch (Exception e) {
             throw new ChainCodeException("Failed to register hospital: "+e.getMessage());
         }
     }
 
-    public String registerDoctor(DoctorDto doctor) {
+    public String registerDoctor(DoctorDto doctor,String hospitalId) {
         try {
             Contract contract = fabricGatewayService.getContract();
-            String doctorJson = JsonUtils.toJson(doctor);
-            contract.submitTransaction("RegisterDoctor", doctorJson);
-            return "The Doctor registered successfully to the network owned by the Hospital name "+doctor.getHospital().getName();
+           // String doctorJson = JsonUtils.toJson(doctor);
+            contract.submitTransaction("RegisterDoctor",doctor.getDoctorId(),doctor.getName(),doctor.getSpecialization(),hospitalId);
+            return "The Doctor registered successfully to the network";
         } catch (Exception e) {
             throw new ChainCodeException("Failed to register doctor: "+e.getMessage());
         }

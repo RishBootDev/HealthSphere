@@ -23,7 +23,7 @@ public class PharmaService {
     public List<MedicineDto> getAllMedicines() {
         try {
             Contract contract = fabricGatewayService.getContract();
-            byte[] result = contract.evaluateTransaction("GetAllMedicines");
+            byte[] result = contract.evaluateTransaction("getAllMedicines");
             return JsonUtils.fromJsonList(new String(result), MedicineDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Unable to fetch medicines: " + e.getMessage());
@@ -34,7 +34,7 @@ public class PharmaService {
     public MedicineDto searchMedicineByName(String name) {
         try {
             Contract contract = fabricGatewayService.getContract();
-            byte[] result = contract.evaluateTransaction("SearchMedicineByName", name);
+            byte[] result = contract.evaluateTransaction("searchMedicineByName", name);
             List<MedicineDto> medicines = JsonUtils.fromJsonList(new String(result), MedicineDto.class);
             if (medicines.isEmpty()) {
                 throw new LedgerAccessException("⚠️ No medicine found with name: " + name);
@@ -49,19 +49,19 @@ public class PharmaService {
     public MedicineDto updateMedicineStock(String medicineId, int stock) {
         try {
             Contract contract = fabricGatewayService.getContract();
-            contract.submitTransaction("UpdateMedicineStock", medicineId, String.valueOf(stock));
+            contract.submitTransaction("updateMedicineStock", medicineId, String.valueOf(stock));
 
-            byte[] updated = contract.evaluateTransaction("GetMedicine", medicineId);
+            byte[] updated = contract.evaluateTransaction("getMedicine", medicineId);
             return JsonUtils.fromJson(new String(updated), MedicineDto.class);
         } catch (Exception e) {
             throw new ChainCodeException(" Failed to update medicine stock: " + e.getMessage());
         }
     }
 
-    public PrescriptionDto getPrescription(String patientId) {
+    public PrescriptionDto getPrescriptionByPatient(String patientId) {
         try {
             Contract contract = fabricGatewayService.getContract();
-            byte[] result = contract.evaluateTransaction("GetPrescriptionByPatient", patientId);
+            byte[] result = contract.evaluateTransaction("getPrescriptionsByPatient", patientId);
             return JsonUtils.fromJson(new String(result), PrescriptionDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException(" Unable to fetch prescription: " + e.getMessage());

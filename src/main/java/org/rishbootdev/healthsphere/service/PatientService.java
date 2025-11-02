@@ -24,16 +24,9 @@ public class PatientService {
     public PatientDto createPatient(PatientDto patient) {
         try {
             Contract contract = fabricGatewayService.getContract();
-            contract.submitTransaction("CreatePatient",
-                    patient.getPatientId(),
-                    patient.getName(),
-                    String.valueOf(patient.getAge()),
-                    patient.getGender(),
-                    patient.getAddress(),
-                    patient.getContact(),
-                    patient.getBloodGroup(),
-                    patient.getAllergies()
-            );
+
+            String patientJson=JsonUtils.toJson(PatientDto.class);
+            contract.submitTransaction("createPatient",patientJson);
             return patient;
         } catch (Exception e) {
             throw new ChainCodeException("Failed to create patient: " + e.getMessage());
@@ -43,18 +36,18 @@ public class PatientService {
     public PatientDto getPatient(String patientId) {
         try {
             Contract contract = fabricGatewayService.getContract();
-            byte[] result = contract.evaluateTransaction("GetPatient", patientId);
+            byte[] result = contract.evaluateTransaction("getPatient", patientId);
             return JsonUtils.fromJson(new String(result), PatientDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException(" Error retrieving patient: " + e.getMessage());
         }
     }
 
-    public List<RecordDto> getPatientRecords(String patientId) {
+    public List<LabReportDto> getPatientReport(String patientId) {
         try {
             Contract contract = fabricGatewayService.getContract();
-            byte[] result = contract.evaluateTransaction("GetAllPatientRecords", patientId);
-            return JsonUtils.fromJsonList(new String(result), RecordDto.class);
+            byte[] result = contract.evaluateTransaction("getReportsByPatient", patientId);
+            return JsonUtils.fromJsonList(new String(result), LabReportDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException(" Unable to fetch patient records: " + e.getMessage());
         }
@@ -73,7 +66,7 @@ public class PatientService {
     public PrescriptionDto getPrescription(String id) {
         try {
             Contract contract = fabricGatewayService.getContract();
-            byte[] result = contract.evaluateTransaction("GetPrescriptionById", id);
+            byte[] result = contract.evaluateTransaction("getPrescriptionById", id);
             return JsonUtils.fromJson(new String(result), PrescriptionDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Unable to fetch prescription: " + e.getMessage());
