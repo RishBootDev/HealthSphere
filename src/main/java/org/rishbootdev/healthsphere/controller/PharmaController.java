@@ -38,9 +38,9 @@ public class PharmaController {
         return ResponseEntity.ok(pharmaService.searchMedicineByName(name));
     }
 
-    @PostMapping("/addmedicine")
-    public ResponseEntity<String> addMedicine(MedicineDto medicineDto){
-        return ResponseEntity.ok(pharmaService.addMedicine(medicineDto));
-    }
+//    @PostMapping("/addmedicine")
+//    public ResponseEntity<String> addMedicine(MedicineDto medicineDto){
+//        return ResponseEntity.ok(pharmaService.addMedicine(medicineDto));
+//    }
 }
 

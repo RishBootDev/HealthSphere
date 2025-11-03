@@ -18,15 +18,15 @@ public class PatientController {
         this.patientService = patientService;
     }
 
-    @GetMapping("/{id}/prescriptions")
-    public ResponseEntity<?> getPrescriptions(@PathVariable String id) {
-        return ResponseEntity.ok(patientService.getPrescription(id));
-    }
-
-    @GetMapping("/{id}/reports")
-    public ResponseEntity<?> getLabReports(@PathVariable String id) {
-        return ResponseEntity.ok(patientService.getLabReport(id));
-    }
+//    @GetMapping("/{id}/prescriptions")
+//    public ResponseEntity<?> getPrescriptions(@PathVariable String id) {
+//        return ResponseEntity.ok(patientService.getPrescription(id));
+//    }
+//
+//    @GetMapping("/{id}/reports")
+//    public ResponseEntity<?> getLabReports(@PathVariable String id) {
+//        return ResponseEntity.ok(patientService.getLabReport(id));
+//    }
 }
 
 

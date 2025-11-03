@@ -15,8 +15,9 @@ public class HospitalDto {
     private String hospitalId;
     private String name;
     private String address;
+    private String license;
     private List<DoctorDto> doctorDtoList;
-    private List<PatientDto> patientDtos;
-    private List<RecordDto> recordDtos;
-    private List<LabDto> labDtos;
+    private List<PatientDto> patientDtoList;
+    private List<RecordDto> recordDtoList;
+    private List<LabDto> labDtoList;
 }

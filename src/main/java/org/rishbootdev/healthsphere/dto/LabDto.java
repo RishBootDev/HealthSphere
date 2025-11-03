@@ -13,5 +13,6 @@ import java.util.List;
 public class LabDto {
     private String labId;
     private String name;
+    private HospitalDto hospitalDto;
     private List<LabReportDto> reports;
 }

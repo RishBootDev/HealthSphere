@@ -11,6 +11,7 @@ public class RecordDto {
     private String recordId;
     private PatientDto patient;
     private DoctorDto doctor;
+    private HospitalDto hospitalDto;
     private String diagnosis;
     private String treatment;
     private String remarks;

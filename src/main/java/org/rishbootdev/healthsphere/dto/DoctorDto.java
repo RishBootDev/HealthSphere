@@ -15,7 +15,7 @@ public class DoctorDto {
     private String specialization;
     private HospitalDto hospital;
     private List<PatientDto> patientDtoList;
-    private List<RecordDto> recordDtos;
+    private List<RecordDto> recordDtoList;
     private String qualification;
     private String contact;
 }

@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,11 +16,17 @@ public class PatientDto {
     private int age;
     private String gender;
     private String address;
-    private String contact;
     private LabReportDto labReportDto;
+    private String contact;
     private String bloodGroup;
     private String allergies;
 
+    @JsonIgnore
+    private List<PrescriptionDto> prescriptionDtoList;
+    @JsonIgnore
+    private List<RecordDto> recordDtoList;
+    @JsonIgnore
+    private DoctorDto doctorDto;
     @JsonIgnore
     private HospitalDto hospitalDto;
 }

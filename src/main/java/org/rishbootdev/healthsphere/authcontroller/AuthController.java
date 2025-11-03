@@ -1,5 +1,6 @@
 package org.rishbootdev.healthsphere.authcontroller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.rishbootdev.healthsphere.authorizationDto.LoginRequest;
 import org.rishbootdev.healthsphere.authorizationDto.LoginResponse;
@@ -55,10 +56,9 @@ public class AuthController {
     }
 
     @GetMapping("/test")
-    public ResponseEntity<String> testApi(){
+    public ResponseEntity<String> testApi(HttpServletRequest req){
         Date date=new Date();
         String message=" Yes the backend api is consumed by the frontend ---> "+date;
-
         System.out.println("Request hit on this server");
 
         return ResponseEntity.ok(message);

@@ -1,5 +1,7 @@
 package org.rishbootdev.healthsphere.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.rishbootdev.healthsphere.dto.PrescriptionDto;
 import org.rishbootdev.healthsphere.dto.RecordDto;
 import org.rishbootdev.healthsphere.service.DoctorService;
@@ -20,7 +22,8 @@ public class DoctorController {
     }
 
     @PostMapping("/patient")
-    public ResponseEntity<RecordDto> createPatientRecord(@RequestBody RecordDto record) {
+    public ResponseEntity<RecordDto> createPatientRecord(@RequestBody RecordDto record, HttpServletRequest req) {
+
         return ResponseEntity.ok(doctorService.createRecord(record));
     }
 

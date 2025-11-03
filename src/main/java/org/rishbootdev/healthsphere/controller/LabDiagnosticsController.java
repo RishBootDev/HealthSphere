@@ -19,14 +19,14 @@ public class LabDiagnosticsController {
         this.labService = labService;
     }
 
-    @GetMapping("/Report/{reportId}")
-    public ResponseEntity<?> getLabReport(@PathVariable String reportId) {
-        return ResponseEntity.ok(labService.getReportsByLabId(reportId));
-    }
-
-    @PostMapping("/report")
-    public ResponseEntity<?> uploadLabReport(@RequestBody LabReportDto report) {
-        return ResponseEntity.ok(labService.uploadReport(report));
-    }
+//    @GetMapping("/Report/{reportId}")
+//    public ResponseEntity<?> getLabReport(@PathVariable String reportId) {
+//        return ResponseEntity.ok(labService.getReportsByLabId(reportId));
+//    }
+//
+//    @PostMapping("/report")
+//    public ResponseEntity<?> uploadLabReport(@RequestBody LabReportDto report) {
+//        return ResponseEntity.ok(labService.uploadReport(report));
+//    }
 }
 

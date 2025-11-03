@@ -19,36 +19,36 @@ public class HospitalController {
     public HospitalController(HospitalService hospitalService) {
         this.hospitalService = hospitalService;
     }
+//
+//    @PostMapping("/doctor")
+//    public ResponseEntity<?> registerDoctor(@RequestBody DoctorDto doctor) {
+//        return ResponseEntity.ok(hospitalService.registerDoctor(doctor,"HSP001"));
+//    }
+//
+//    @GetMapping("/doctors")
+//    public ResponseEntity<?> getAllDoctors() {
+//        return ResponseEntity.ok(hospitalService.getAllDoctors());
+//    }
+//
+//    @GetMapping("/doctor/{doctorId}")
+//    public ResponseEntity<?> getDoctorById(@PathVariable String doctorId) {
+//        return ResponseEntity.ok(hospitalService.getDoctorById(doctorId));
+//    }
 
-    @PostMapping("/doctor")
-    public ResponseEntity<?> registerDoctor(@RequestBody DoctorDto doctor) {
-        return ResponseEntity.ok(hospitalService.registerDoctor(doctor,"HSP001"));
-    }
+//    @GetMapping("/patients")
+//    public ResponseEntity<?> getHospitalPatients() {
+//        return ResponseEntity.ok(hospitalService.getAllPatients());
+//    }
 
-    @GetMapping("/doctors")
-    public ResponseEntity<?> getAllDoctors() {
-        return ResponseEntity.ok(hospitalService.getAllDoctors());
-    }
+//    @GetMapping("/patient/{patientId}")
+//    public ResponseEntity<?> getPatientDetails(@PathVariable String patientId) {
+//        return ResponseEntity.ok(hospitalService.
+//    }
 
-    @GetMapping("/doctor/{doctorId}")
-    public ResponseEntity<?> getDoctorById(@PathVariable String doctorId) {
-        return ResponseEntity.ok(hospitalService.getDoctorById(doctorId));
-    }
-
-    @GetMapping("/patients")
-    public ResponseEntity<?> getHospitalPatients() {
-        return ResponseEntity.ok(hospitalService.getAllPatients());
-    }
-
-    @GetMapping("/patient/{patientId}")
-    public ResponseEntity<?> getPatientDetails(@PathVariable String patientId) {
-        return ResponseEntity.ok(hospitalService.getPatientDetails(patientId));
-    }
-
-    @GetMapping("/records")
-    public ResponseEntity<?> getAllRecords() {
-        return ResponseEntity.ok(hospitalService.getAllRecords());
-    }
+//    @GetMapping("/records")
+//    public ResponseEntity<?> getAllRecords() {
+//        return ResponseEntity.ok(hospitalService.getAllRecords());
+//    }
 
 
     @PostMapping("/registerHospital")

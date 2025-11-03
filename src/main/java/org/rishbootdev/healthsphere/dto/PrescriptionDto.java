@@ -14,7 +14,7 @@ public class PrescriptionDto {
     private PatientDto patient;
     private DoctorDto doctor;
     private List<MedicineDto> medicines;
-    private String dateIssued;
+    private String issueDate;
     private String remarks;
 }
 

@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.hyperledger.fabric.client.Contract;
 import org.rishbootdev.healthsphere.dto.MedicineDto;
 import org.rishbootdev.healthsphere.dto.PharmaDto;
-import org.rishbootdev.healthsphere.dto.PrescriptionDto;
 import org.rishbootdev.healthsphere.exception.ChainCodeException;
 import org.rishbootdev.healthsphere.exception.LedgerAccessException;
 import org.rishbootdev.healthsphere.utility.JsonUtils;
@@ -14,28 +13,29 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class PharmaService {
+public class MedicineService {
 
     private final FabricGatewayService fabricGatewayService;
 
-    public MedicineDto createMedicine(MedicineDto medicineDto) {
+
+    public MedicineDto createMedicine(MedicineDto medicine) {
         try {
             Contract contract = fabricGatewayService.getContract();
-            String medicineJson = JsonUtils.toJson(medicineDto);
+            String medicineJson = JsonUtils.toJson(medicine);
             contract.submitTransaction("createMedicine", medicineJson);
-            return medicineDto;
+            return medicine;
         } catch (Exception e) {
             throw new ChainCodeException("Failed to create medicine: " + e.getMessage());
         }
     }
 
-    public MedicineDto getMedicine(String medicineId) {
+    public MedicineDto readMedicine(String medicineId) {
         try {
             Contract contract = fabricGatewayService.getContract();
             byte[] result = contract.evaluateTransaction("readMedicine", medicineId);
             return JsonUtils.fromJson(new String(result), MedicineDto.class);
         } catch (Exception e) {
-            throw new LedgerAccessException("Unable to fetch medicine: " + e.getMessage());
+            throw new LedgerAccessException("Error reading medicine: " + e.getMessage());
         }
     }
 
@@ -45,32 +45,18 @@ public class PharmaService {
             byte[] result = contract.evaluateTransaction("getAllMedicines");
             return JsonUtils.fromJsonList(new String(result), MedicineDto.class);
         } catch (Exception e) {
-            throw new LedgerAccessException("Unable to fetch all medicines: " + e.getMessage());
+            throw new LedgerAccessException("Unable to fetch medicines: " + e.getMessage());
         }
     }
 
-    public MedicineDto updateMedicine(MedicineDto medicineDto) {
+    public MedicineDto updateMedicine(MedicineDto medicine) {
         try {
             Contract contract = fabricGatewayService.getContract();
-            String medicineJson = JsonUtils.toJson(medicineDto);
+            String medicineJson = JsonUtils.toJson(medicine);
             contract.submitTransaction("updateMedicine", medicineJson);
-
-            byte[] updated = contract.evaluateTransaction("readMedicine", medicineDto.getId());
-            return JsonUtils.fromJson(new String(updated), MedicineDto.class);
+            return medicine;
         } catch (Exception e) {
             throw new ChainCodeException("Failed to update medicine: " + e.getMessage());
-        }
-    }
-
-    public MedicineDto updateMedicineStock(String medicineId, int stock) {
-        try {
-            Contract contract = fabricGatewayService.getContract();
-            contract.submitTransaction("updateMedicineStock", medicineId, String.valueOf(stock));
-
-            byte[] updated = contract.evaluateTransaction("readMedicine", medicineId);
-            return JsonUtils.fromJson(new String(updated), MedicineDto.class);
-        } catch (Exception e) {
-            throw new ChainCodeException("Failed to update stock: " + e.getMessage());
         }
     }
 
@@ -94,6 +80,16 @@ public class PharmaService {
         }
     }
 
+    public MedicineDto updateMedicineStock(String medicineId, int newStock) {
+        try {
+            Contract contract = fabricGatewayService.getContract();
+            byte[] result = contract.submitTransaction("updateMedicineStock", medicineId, String.valueOf(newStock));
+            return JsonUtils.fromJson(new String(result), MedicineDto.class);
+        } catch (Exception e) {
+            throw new ChainCodeException("Failed to update medicine stock: " + e.getMessage());
+        }
+    }
+
     public PharmaDto addMedicineToPharma(String pharmaId, String medicineId) {
         try {
             Contract contract = fabricGatewayService.getContract();
@@ -103,6 +99,7 @@ public class PharmaService {
             throw new ChainCodeException("Failed to add medicine to pharma: " + e.getMessage());
         }
     }
+
     public PharmaDto removeMedicineFromPharma(String pharmaId, String medicineId) {
         try {
             Contract contract = fabricGatewayService.getContract();
@@ -119,17 +116,7 @@ public class PharmaService {
             byte[] result = contract.evaluateTransaction("getMedicinesByPharma", pharmaId);
             return JsonUtils.fromJsonList(new String(result), MedicineDto.class);
         } catch (Exception e) {
-            throw new LedgerAccessException("Unable to fetch medicines by pharma: " + e.getMessage());
-        }
-    }
-
-    public PrescriptionDto getPrescriptionByPatient(String patientId) {
-        try {
-            Contract contract = fabricGatewayService.getContract();
-            byte[] result = contract.evaluateTransaction("getPrescriptionsByPatient", patientId);
-            return JsonUtils.fromJson(new String(result), PrescriptionDto.class);
-        } catch (Exception e) {
-            throw new LedgerAccessException("Unable to fetch prescription: " + e.getMessage());
+            throw new LedgerAccessException("Error fetching medicines by pharma: " + e.getMessage());
         }
     }
 }
