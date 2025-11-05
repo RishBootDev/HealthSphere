@@ -6,6 +6,7 @@ public enum Role {
     HOSPITAL,
     LAB,
     PHARMA,
-    PATIENT
+    PATIENT,
+    ADMIN
 }
 

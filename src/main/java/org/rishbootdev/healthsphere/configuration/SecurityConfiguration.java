@@ -38,8 +38,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("api/test/**").permitAll()
-                        .requestMatchers("/api/doctor/**").hasRole("DOCTOR")
-                        .requestMatchers("/api/hospital/**").hasRole("HOSPITAL")
+                        .requestMatchers("/api/doctor/**").permitAll()
+                        .requestMatchers("/api/hospital/**").permitAll()
                         .requestMatchers("/api/lab/**").hasRole("LAB")
                         .requestMatchers("/api/patient/**").hasRole("PATIENT")
                         .requestMatchers("/api/pharma/**").hasRole("PHARMA")

@@ -18,9 +18,13 @@ public class PharmaService {
 
     private final FabricGatewayService fabricGatewayService;
 
+    private Contract getPharmaContract(){
+        return fabricGatewayService.getContract("PharmaContract");
+    }
+
     public MedicineDto createMedicine(MedicineDto medicineDto) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getPharmaContract();
             String medicineJson = JsonUtils.toJson(medicineDto);
             contract.submitTransaction("createMedicine", medicineJson);
             return medicineDto;
@@ -31,7 +35,7 @@ public class PharmaService {
 
     public MedicineDto getMedicine(String medicineId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getPharmaContract();
             byte[] result = contract.evaluateTransaction("readMedicine", medicineId);
             return JsonUtils.fromJson(new String(result), MedicineDto.class);
         } catch (Exception e) {
@@ -41,7 +45,7 @@ public class PharmaService {
 
     public List<MedicineDto> getAllMedicines() {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getPharmaContract();
             byte[] result = contract.evaluateTransaction("getAllMedicines");
             return JsonUtils.fromJsonList(new String(result), MedicineDto.class);
         } catch (Exception e) {
@@ -51,7 +55,7 @@ public class PharmaService {
 
     public MedicineDto updateMedicine(MedicineDto medicineDto) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getPharmaContract();
             String medicineJson = JsonUtils.toJson(medicineDto);
             contract.submitTransaction("updateMedicine", medicineJson);
 
@@ -64,7 +68,7 @@ public class PharmaService {
 
     public MedicineDto updateMedicineStock(String medicineId, int stock) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getPharmaContract();
             contract.submitTransaction("updateMedicineStock", medicineId, String.valueOf(stock));
 
             byte[] updated = contract.evaluateTransaction("readMedicine", medicineId);
@@ -76,7 +80,7 @@ public class PharmaService {
 
     public String deleteMedicine(String medicineId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract =getPharmaContract();
             contract.submitTransaction("deleteMedicine", medicineId);
             return "Medicine deleted successfully: " + medicineId;
         } catch (Exception e) {
@@ -105,7 +109,7 @@ public class PharmaService {
     }
     public PharmaDto removeMedicineFromPharma(String pharmaId, String medicineId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getPharmaContract();
             byte[] result = contract.submitTransaction("removeMedicineFromPharma", pharmaId, medicineId);
             return JsonUtils.fromJson(new String(result), PharmaDto.class);
         } catch (Exception e) {
@@ -115,7 +119,7 @@ public class PharmaService {
 
     public List<MedicineDto> getMedicinesByPharma(String pharmaId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getPharmaContract();
             byte[] result = contract.evaluateTransaction("getMedicinesByPharma", pharmaId);
             return JsonUtils.fromJsonList(new String(result), MedicineDto.class);
         } catch (Exception e) {
@@ -125,7 +129,7 @@ public class PharmaService {
 
     public PrescriptionDto getPrescriptionByPatient(String patientId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getPharmaContract();
             byte[] result = contract.evaluateTransaction("getPrescriptionsByPatient", patientId);
             return JsonUtils.fromJson(new String(result), PrescriptionDto.class);
         } catch (Exception e) {

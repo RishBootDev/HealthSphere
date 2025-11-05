@@ -12,9 +12,16 @@ public class TestService {
 
     private final FabricGatewayService fabricGatewayService;
 
+    private Contract getTestContract() throws Exception {
+        // Access "Test Contract" from the chaincode "healthsphere"
+        return fabricGatewayService.getContract( "TestContract");
+        // ⚠️ Note: The second argument must match the @Contract(name="...") in your chaincode.
+        // If your chaincode uses @Contract(name="Test Contract") with a space, use that exact string.
+    }
+
     public String ping() {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getTestContract();
             byte[] result = contract.evaluateTransaction("ping");
             return new String(result);
         } catch (Exception e) {
@@ -24,7 +31,7 @@ public class TestService {
 
     public String healthCheck() {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getTestContract();
             byte[] result = contract.evaluateTransaction("healthCheck");
             return new String(result);
         } catch (Exception e) {
@@ -32,10 +39,9 @@ public class TestService {
         }
     }
 
-    /** 🔹 Create a test key-value record in ledger */
     public String createRecordTest(String key, String value) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getTestContract();
             contract.submitTransaction("createRecordTest", key, value);
             return "Record created successfully with key: " + key;
         } catch (Exception e) {
@@ -45,7 +51,7 @@ public class TestService {
 
     public String queryRecordTest(String key) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getTestContract();
             byte[] result = contract.evaluateTransaction("queryRecordTest", key);
             return new String(result);
         } catch (Exception e) {
@@ -55,7 +61,7 @@ public class TestService {
 
     public String deleteRecordTest(String key) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getTestContract();
             contract.submitTransaction("deleteRecordTest", key);
             return "Record deleted successfully with key: " + key;
         } catch (Exception e) {
@@ -65,7 +71,7 @@ public class TestService {
 
     public String testLedgerData() {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getTestContract();
             byte[] result = contract.submitTransaction("testLedgerData");
             return new String(result);
         } catch (Exception e) {

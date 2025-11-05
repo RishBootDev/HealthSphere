@@ -1,6 +1,7 @@
 package org.rishbootdev.healthsphere.dto;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,12 +9,13 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LabReportDto {
     private String reportId;
-    private PatientDto patient;
+    private String patientId;
     private String testType;
     private String testResult;
-    private LabDto lab;
+    private String labId;
     private String testDate;
     private String remarks;
 }

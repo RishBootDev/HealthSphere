@@ -17,11 +17,14 @@ public class PatientService {
 
     private final FabricGatewayService fabricGatewayService;
 
+    private Contract getPatientContract(){
+        return fabricGatewayService.getContract("PatientContract");
+    }
 
-    // Create new patient
+
     public PatientDto createPatient(PatientDto patient) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getPatientContract();
             String patientJson = JsonUtils.toJson(patient);
             contract.submitTransaction("createPatient", patientJson);
             return patient;
@@ -33,7 +36,7 @@ public class PatientService {
     // Retrieve a single patient
     public PatientDto getPatient(String patientId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getPatientContract();
             byte[] result = contract.evaluateTransaction("getPatient", patientId);
             return JsonUtils.fromJson(new String(result), PatientDto.class);
         } catch (Exception e) {
@@ -44,7 +47,7 @@ public class PatientService {
     //  Update patient record
     public PatientDto updatePatient(PatientDto patient) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getPatientContract();
             String patientJson = JsonUtils.toJson(patient);
             contract.submitTransaction("updatePatient", patientJson);
             return patient;
@@ -56,7 +59,7 @@ public class PatientService {
     //  Delete a patient and their reports
     public String deletePatient(String patientId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getPatientContract();
             contract.submitTransaction("deletePatient", patientId);
             return "Patient deleted successfully: " + patientId;
         } catch (Exception e) {
@@ -67,7 +70,7 @@ public class PatientService {
     //  Get all patients
     public List<PatientDto> getAllPatients() {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getPatientContract();
             byte[] result = contract.evaluateTransaction("getAllPatients");
             return JsonUtils.fromJsonList(new String(result), PatientDto.class);
         } catch (Exception e) {
@@ -78,7 +81,7 @@ public class PatientService {
     //  Assign a doctor to a patient
     public String assignDoctorToPatient(String patientId, String doctorId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getPatientContract();
             contract.submitTransaction("assignDoctorToPatient", patientId, doctorId);
             return "Assigned doctor " + doctorId + " to patient " + patientId;
         } catch (Exception e) {
@@ -89,7 +92,7 @@ public class PatientService {
     //  Remove doctor from a patient
     public String removeDoctorFromPatient(String patientId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getPatientContract();
             contract.submitTransaction("removeDoctorFromPatient", patientId);
             return "Removed doctor from patient " + patientId;
         } catch (Exception e) {
@@ -100,7 +103,7 @@ public class PatientService {
     //  Assign hospital to patient
     public String assignHospitalToPatient(String patientId, String hospitalId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getPatientContract();
             contract.submitTransaction("assignHospitalToPatient", patientId, hospitalId);
             return "Assigned hospital " + hospitalId + " to patient " + patientId;
         } catch (Exception e) {
@@ -111,18 +114,16 @@ public class PatientService {
     //  Remove hospital from patient
     public String removeHospitalFromPatient(String patientId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getPatientContract();
             contract.submitTransaction("removeHospitalFromPatient", patientId);
             return "Removed hospital from patient " + patientId;
         } catch (Exception e) {
             throw new ChainCodeException("Failed to remove hospital: " + e.getMessage());
         }
     }
-
-    //  Link report to patient
     public String linkReportToPatient(String patientId, String reportId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getPatientContract();
             contract.submitTransaction("linkReportToPatient", patientId, reportId);
             return "Linked report " + reportId + " to patient " + patientId;
         } catch (Exception e) {
@@ -130,10 +131,9 @@ public class PatientService {
         }
     }
 
-    //  Unlink report from patient
     public String unlinkReportFromPatient(String patientId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getPatientContract();
             contract.submitTransaction("unlinkReportFromPatient", patientId);
             return "Unlinked report from patient " + patientId;
         } catch (Exception e) {
@@ -141,10 +141,9 @@ public class PatientService {
         }
     }
 
-    // Get all lab reports associated with a patient
     public List<LabReportDto> getReportsByPatient(String patientId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getPatientContract();
             byte[] result = contract.evaluateTransaction("getReportsByPatient", patientId);
             return JsonUtils.fromJsonList(new String(result), LabReportDto.class);
         } catch (Exception e) {

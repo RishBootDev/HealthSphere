@@ -17,10 +17,14 @@ public class MedicineService {
 
     private final FabricGatewayService fabricGatewayService;
 
+    private Contract getMedicineContract(){
+        return fabricGatewayService.getContract("LabContract");
+    }
+
 
     public MedicineDto createMedicine(MedicineDto medicine) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract= getMedicineContract();
             String medicineJson = JsonUtils.toJson(medicine);
             contract.submitTransaction("createMedicine", medicineJson);
             return medicine;
@@ -31,7 +35,7 @@ public class MedicineService {
 
     public MedicineDto readMedicine(String medicineId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getMedicineContract();
             byte[] result = contract.evaluateTransaction("readMedicine", medicineId);
             return JsonUtils.fromJson(new String(result), MedicineDto.class);
         } catch (Exception e) {
@@ -41,7 +45,7 @@ public class MedicineService {
 
     public List<MedicineDto> getAllMedicines() {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getMedicineContract();
             byte[] result = contract.evaluateTransaction("getAllMedicines");
             return JsonUtils.fromJsonList(new String(result), MedicineDto.class);
         } catch (Exception e) {
@@ -51,7 +55,7 @@ public class MedicineService {
 
     public MedicineDto updateMedicine(MedicineDto medicine) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getMedicineContract();
             String medicineJson = JsonUtils.toJson(medicine);
             contract.submitTransaction("updateMedicine", medicineJson);
             return medicine;
@@ -62,7 +66,7 @@ public class MedicineService {
 
     public String deleteMedicine(String medicineId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getMedicineContract();
             contract.submitTransaction("deleteMedicine", medicineId);
             return "Medicine deleted successfully: " + medicineId;
         } catch (Exception e) {
@@ -72,7 +76,7 @@ public class MedicineService {
 
     public List<MedicineDto> searchMedicineByName(String name) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract =getMedicineContract();
             byte[] result = contract.evaluateTransaction("searchMedicineByName", name);
             return JsonUtils.fromJsonList(new String(result), MedicineDto.class);
         } catch (Exception e) {
@@ -82,7 +86,7 @@ public class MedicineService {
 
     public MedicineDto updateMedicineStock(String medicineId, int newStock) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract =getMedicineContract();
             byte[] result = contract.submitTransaction("updateMedicineStock", medicineId, String.valueOf(newStock));
             return JsonUtils.fromJson(new String(result), MedicineDto.class);
         } catch (Exception e) {
@@ -92,7 +96,7 @@ public class MedicineService {
 
     public PharmaDto addMedicineToPharma(String pharmaId, String medicineId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getMedicineContract();
             byte[] result = contract.submitTransaction("addMedicineToPharma", pharmaId, medicineId);
             return JsonUtils.fromJson(new String(result), PharmaDto.class);
         } catch (Exception e) {
@@ -102,7 +106,7 @@ public class MedicineService {
 
     public PharmaDto removeMedicineFromPharma(String pharmaId, String medicineId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getMedicineContract();
             byte[] result = contract.submitTransaction("removeMedicineFromPharma", pharmaId, medicineId);
             return JsonUtils.fromJson(new String(result), PharmaDto.class);
         } catch (Exception e) {
@@ -112,7 +116,7 @@ public class MedicineService {
 
     public List<MedicineDto> getMedicinesByPharma(String pharmaId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getMedicineContract();
             byte[] result = contract.evaluateTransaction("getMedicinesByPharma", pharmaId);
             return JsonUtils.fromJsonList(new String(result), MedicineDto.class);
         } catch (Exception e) {

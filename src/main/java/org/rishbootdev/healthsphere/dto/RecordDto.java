@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RecordDto {
     private String recordId;
-    private PatientDto patient;
-    private DoctorDto doctor;
-    private HospitalDto hospitalDto;
+    private String patientId;
+    private String doctorId;
+    private String hospitalId;
     private String diagnosis;
     private String treatment;
     private String remarks;

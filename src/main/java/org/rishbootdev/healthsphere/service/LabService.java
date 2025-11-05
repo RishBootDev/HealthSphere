@@ -1,5 +1,6 @@
 package org.rishbootdev.healthsphere.service;
 
+import lombok.RequiredArgsConstructor;
 import org.hyperledger.fabric.client.Contract;
 import org.rishbootdev.healthsphere.dto.LabDto;
 import org.rishbootdev.healthsphere.dto.LabReportDto;
@@ -8,21 +9,23 @@ import org.rishbootdev.healthsphere.exception.LedgerAccessException;
 import org.rishbootdev.healthsphere.utility.JsonUtils;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class LabService {
 
     private final FabricGatewayService fabricGatewayService;
 
-    public LabService(FabricGatewayService fabricGatewayService) {
-        this.fabricGatewayService = fabricGatewayService;
+    public Contract getLabContract(){
+        return fabricGatewayService.getContract("LabContract");
     }
 
     public String createLab(LabDto lab) {
         try {
-            Contract contract = fabricGatewayService.getContract();
-            contract.submitTransaction("createLab", lab.getLabId(), lab.getName(), lab.getHospitalDto().getHospitalId());
+            Contract contract = getLabContract();
+            contract.submitTransaction("createLab", lab.getLabId(), lab.getName(), lab.getHospitalId());
             return "Lab created successfully with ID: " + lab.getLabId();
         } catch (Exception e) {
             throw new ChainCodeException("Failed to create lab: " + e.getMessage());
@@ -31,7 +34,7 @@ public class LabService {
 
     public LabDto readLab(String labId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getLabContract();
             byte[] result = contract.evaluateTransaction("readLab", labId);
             return JsonUtils.fromJson(new String(result), LabDto.class);
         } catch (Exception e) {
@@ -41,7 +44,7 @@ public class LabService {
 
     public LabDto updateLab(String labId, String newName) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getLabContract();
             byte[] result = contract.submitTransaction("updateLab", labId, newName);
             return JsonUtils.fromJson(new String(result), LabDto.class);
         } catch (Exception e) {
@@ -51,7 +54,7 @@ public class LabService {
 
     public String deleteLab(String labId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract =getLabContract();
             contract.submitTransaction("deleteLab", labId);
             return "Lab deleted successfully with ID: " + labId;
         } catch (Exception e) {
@@ -61,7 +64,7 @@ public class LabService {
 
     public List<LabDto> getAllLabs() {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getLabContract();
             byte[] result = contract.evaluateTransaction("getAllLabs");
             return JsonUtils.fromJsonList(new String(result), LabDto.class);
         } catch (Exception e) {
@@ -71,14 +74,14 @@ public class LabService {
 
     public LabReportDto createLabReport(LabReportDto report) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getLabContract();
             contract.submitTransaction(
                     "createLabReport",
                     report.getReportId(),
-                    report.getPatient().getPatientId(),
+                    report.getPatientId(),
                     report.getTestType(),
                     report.getTestResult(),
-                    report.getLab().getLabId(),
+                    report.getLabId(),
                     report.getTestDate(),
                     report.getRemarks()
             );
@@ -90,7 +93,7 @@ public class LabService {
 
     public LabReportDto readLabReport(String reportId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getLabContract();
             byte[] result = contract.evaluateTransaction("readLabReport", reportId);
             return JsonUtils.fromJson(new String(result), LabReportDto.class);
         } catch (Exception e) {
@@ -100,7 +103,7 @@ public class LabService {
 
     public LabReportDto updateLabReport(LabReportDto report) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getLabContract();
             byte[] result = contract.submitTransaction(
                     "updateLabReport",
                     report.getReportId(),
@@ -117,7 +120,7 @@ public class LabService {
 
     public String deleteLabReport(String reportId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getLabContract();
             contract.submitTransaction("deleteLabReport", reportId);
             return "Lab report deleted successfully with ID: " + reportId;
         } catch (Exception e) {
@@ -127,7 +130,7 @@ public class LabService {
 
     public List<LabReportDto> getAllLabReports() {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getLabContract();
             byte[] result = contract.evaluateTransaction("getAllLabReports");
             return JsonUtils.fromJsonList(new String(result), LabReportDto.class);
         } catch (Exception e) {
@@ -137,9 +140,9 @@ public class LabService {
 
     public List<LabReportDto> getReportsByPatient(String patientId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getLabContract();
             byte[] result = contract.evaluateTransaction("getReportsByPatient", patientId);
-            return JsonUtils.fromJsonList(new String(result), LabReportDto.class);
+            return JsonUtils.fromJsonList(new String(result, StandardCharsets.UTF_8), LabReportDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Unable to retrieve reports for patient: " + e.getMessage());
         }
@@ -147,7 +150,7 @@ public class LabService {
 
     public String addReportToLab(String labId, String reportId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getLabContract();
             contract.submitTransaction("addReportToLab", labId, reportId);
             return "Report " + reportId + " added to Lab " + labId + " successfully.";
         } catch (Exception e) {
@@ -157,7 +160,7 @@ public class LabService {
 
     public String addLabToHospital(String hospitalId, String labId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getLabContract();
             contract.submitTransaction("addLabToHospital", hospitalId, labId);
             return "Lab " + labId + " linked successfully to Hospital " + hospitalId;
         } catch (Exception e) {
