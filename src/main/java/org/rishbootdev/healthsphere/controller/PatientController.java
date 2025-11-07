@@ -1,14 +1,8 @@
 package org.rishbootdev.healthsphere.controller;
 
-
 import lombok.RequiredArgsConstructor;
-import org.rishbootdev.healthsphere.dto.LabReportDto;
-import org.rishbootdev.healthsphere.dto.PatientDto;
-import org.rishbootdev.healthsphere.dto.PrescriptionDto;
-import org.rishbootdev.healthsphere.service.AiService;
-import org.rishbootdev.healthsphere.service.LabService;
-import org.rishbootdev.healthsphere.service.PatientService;
-import org.rishbootdev.healthsphere.service.PrescriptionService;
+import org.rishbootdev.healthsphere.dto.*;
+import org.rishbootdev.healthsphere.service.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +22,6 @@ public class PatientController {
     private final PrescriptionService prescriptionService;
     private final AiService aiService;
 
-
     @GetMapping("/getPatient/{patientId}")
     public ResponseEntity<PatientDto> getPatient(@PathVariable String patientId) {
         return ResponseEntity.ok(patientService.getPatient(patientId));
@@ -44,7 +37,6 @@ public class PatientController {
         return ResponseEntity.ok(patientService.deletePatient(patientId));
     }
 
-
     @GetMapping("/{patientId}/reports")
     public ResponseEntity<List<LabReportDto>> getReportsByPatient(@PathVariable String patientId) {
         return ResponseEntity.ok(patientService.getReportsByPatient(patientId));
@@ -56,15 +48,22 @@ public class PatientController {
     }
 
     @GetMapping("/chat/{query}")
-    public ResponseEntity<Flux<String>> getResponseFromAI(@PathVariable String query){
+    public ResponseEntity<Flux<String>> getResponseFromAI(@PathVariable String query) {
         return ResponseEntity.ok(aiService.getResponseForPatient(query));
     }
 
     @GetMapping("/getPrescriptions/{patientId}")
-    public ResponseEntity<List<PrescriptionDto>> getPrescriptionsForPatient(@PathVariable String patientId){
+    public ResponseEntity<List<PrescriptionDto>> getPrescriptionsForPatient(@PathVariable String patientId) {
         return ResponseEntity.ok(prescriptionService.getPrescriptionsByPatient(patientId));
     }
 
+    @GetMapping("/{patientId}/records")
+    public ResponseEntity<List<RecordDto>> getRecordsByPatient(@PathVariable String patientId) {
+        return ResponseEntity.ok(null);
+    }
+
+    @GetMapping("/record/{patientId}")
+    public ResponseEntity<List<RecordDto>> getRecordsAlias(@PathVariable String patientId) {
+        return ResponseEntity.ok(null);
+    }
 }
-
-
