@@ -26,5 +26,12 @@ public class User {
 
     @Column(unique = true, nullable = false)
     private String userId;
+
+    public User(String email,String passwordHash,Role role,String userId){
+        this.email=email;
+        this.passwordHash=passwordHash;
+        this.role=role;
+        this.userId=userId;
+    }
 }
 

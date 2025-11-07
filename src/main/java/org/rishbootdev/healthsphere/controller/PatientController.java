@@ -4,10 +4,15 @@ package org.rishbootdev.healthsphere.controller;
 import lombok.RequiredArgsConstructor;
 import org.rishbootdev.healthsphere.dto.LabReportDto;
 import org.rishbootdev.healthsphere.dto.PatientDto;
+import org.rishbootdev.healthsphere.dto.PrescriptionDto;
+import org.rishbootdev.healthsphere.service.AiService;
+import org.rishbootdev.healthsphere.service.LabService;
 import org.rishbootdev.healthsphere.service.PatientService;
+import org.rishbootdev.healthsphere.service.PrescriptionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 
@@ -19,50 +24,45 @@ import java.util.List;
 public class PatientController {
 
     private final PatientService patientService;
+    private final LabService labService;
+    private final PrescriptionService prescriptionService;
+    private final AiService aiService;
 
-    @PostMapping("/create")
-    public ResponseEntity<PatientDto> createPatient(@RequestBody PatientDto patientDto) {
-        return ResponseEntity.ok(patientService.createPatient(patientDto));
-    }
 
-    @GetMapping("/{patientId}")
+    @GetMapping("/getPatient/{patientId}")
     public ResponseEntity<PatientDto> getPatient(@PathVariable String patientId) {
         return ResponseEntity.ok(patientService.getPatient(patientId));
     }
 
-    @PutMapping("/update")
+    @PutMapping("/updatePatient")
     public ResponseEntity<PatientDto> updatePatient(@RequestBody PatientDto patientDto) {
         return ResponseEntity.ok(patientService.updatePatient(patientDto));
     }
 
-    @DeleteMapping("/{patientId}")
+    @DeleteMapping("/deletePatient/{patientId}")
     public ResponseEntity<String> deletePatient(@PathVariable String patientId) {
         return ResponseEntity.ok(patientService.deletePatient(patientId));
     }
 
-    @PutMapping("/{patientId}/assign-doctor/{doctorId}")
-    public ResponseEntity<String> assignDoctorToPatient(@PathVariable String patientId, @PathVariable String doctorId) {
-        return ResponseEntity.ok(patientService.assignDoctorToPatient(patientId, doctorId));
-    }
-
-    @PutMapping("/{patientId}/remove-doctor")
-    public ResponseEntity<String> removeDoctorFromPatient(@PathVariable String patientId) {
-        return ResponseEntity.ok(patientService.removeDoctorFromPatient(patientId));
-    }
-
-    @PutMapping("/{patientId}/assign-hospital/{hospitalId}")
-    public ResponseEntity<String> assignHospitalToPatient(@PathVariable String patientId, @PathVariable String hospitalId) {
-        return ResponseEntity.ok(patientService.assignHospitalToPatient(patientId, hospitalId));
-    }
-
-    @PutMapping("/{patientId}/remove-hospital")
-    public ResponseEntity<String> removeHospitalFromPatient(@PathVariable String patientId) {
-        return ResponseEntity.ok(patientService.removeHospitalFromPatient(patientId));
-    }
 
     @GetMapping("/{patientId}/reports")
     public ResponseEntity<List<LabReportDto>> getReportsByPatient(@PathVariable String patientId) {
         return ResponseEntity.ok(patientService.getReportsByPatient(patientId));
+    }
+
+    @GetMapping("/reports/{reportId}")
+    public ResponseEntity<LabReportDto> getLabReport(@PathVariable String reportId) {
+        return ResponseEntity.ok(labService.readLabReport(reportId));
+    }
+
+    @GetMapping("/chat/{query}")
+    public ResponseEntity<Flux<String>> getResponseFromAI(@PathVariable String query){
+        return ResponseEntity.ok(aiService.getResponseForPatient(query));
+    }
+
+    @GetMapping("/getPrescriptions/{patientId}")
+    public ResponseEntity<List<PrescriptionDto>> getPrescriptionsForPatient(@PathVariable String patientId){
+        return ResponseEntity.ok(prescriptionService.getPrescriptionsByPatient(patientId));
     }
 
 }

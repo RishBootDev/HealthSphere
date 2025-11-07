@@ -3,12 +3,14 @@ package org.rishbootdev.healthsphere.controller;
 import lombok.RequiredArgsConstructor;
 import org.rishbootdev.healthsphere.dto.*;
 import org.rishbootdev.healthsphere.service.DoctorService;
+import org.rishbootdev.healthsphere.service.PatientService;
 import org.rishbootdev.healthsphere.service.PrescriptionService;
 import org.rishbootdev.healthsphere.service.RecordService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/doctor")
@@ -19,12 +21,15 @@ public class DoctorController {
 
     private final DoctorService doctorService;
     private final PrescriptionService prescriptionService;
+    private final PatientService patientService;
     private final RecordService recordService;
 
 
     @PostMapping("/patient")
     public ResponseEntity<RecordDto> createPatientRecord(@RequestBody RecordDto record) {
-        return ResponseEntity.ok(doctorService.createRecord(record));
+        String customId = "REC" + UUID.randomUUID().toString().substring(0,5);
+        record.setRecordId(customId);
+        return ResponseEntity.ok(recordService.createPatientRecord(record));
     }
 
     @PutMapping("/patient/{recordId}")
@@ -35,6 +40,7 @@ public class DoctorController {
 
     @PostMapping("/prescription")
     public ResponseEntity<String> uploadPrescription(@RequestBody PrescriptionDto prescription) {
+        String customId = "PRES" + UUID.randomUUID().toString().substring(0,5);
         return ResponseEntity.ok(doctorService.uploadPrescription(prescription));
     }
 
@@ -43,44 +49,20 @@ public class DoctorController {
         return ResponseEntity.ok(doctorService.getPrescriptionsByPatient(patientId));
     }
 
-    @GetMapping("/patients")
-    public ResponseEntity<List<PatientDto>> getAllPatients() {
-        return ResponseEntity.ok(doctorService.getPatients());
-    }
 
     @GetMapping("/records/search")
     public ResponseEntity<List<RecordDto>> searchRecords(@RequestParam String keyword) {
         return ResponseEntity.ok(doctorService.searchRecords(keyword));
     }
 
-    @GetMapping("/{doctorId}")
+    @GetMapping("/getDoctor/{doctorId}")
     public ResponseEntity<DoctorDto> getDoctorById(@PathVariable String doctorId) {
         return ResponseEntity.ok(doctorService.getDoctorById(doctorId));
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<String> createDoctor(@RequestBody DoctorDto doctorDto) {
-        return ResponseEntity.ok(doctorService.createDoctor(doctorDto));
-    }
-
-    @PostMapping("/register")
-    public ResponseEntity<String> registerDoctor(@RequestBody DoctorDto doctorDto) {
-        return ResponseEntity.ok(doctorService.registerDoctor(doctorDto));
-    }
-
-    @PutMapping("/update")
+    @PutMapping("/updateDoctor")
     public ResponseEntity<String> updateDoctor(@RequestBody DoctorDto doctorDto) {
         return ResponseEntity.ok(doctorService.updateDoctor(doctorDto));
-    }
-
-    @DeleteMapping("/{doctorId}")
-    public ResponseEntity<String> deleteDoctor(@PathVariable String doctorId) {
-        return ResponseEntity.ok(doctorService.deleteDoctor(doctorId));
-    }
-
-    @GetMapping("/all")
-    public ResponseEntity<List<DoctorDto>> getAllDoctors() {
-        return ResponseEntity.ok(doctorService.getAllDoctors());
     }
 
     @GetMapping("/{doctorId}/patients")
@@ -119,6 +101,8 @@ public class DoctorController {
 
     @PostMapping("/create")
     public ResponseEntity<String> createPrescription(@RequestBody PrescriptionDto prescriptionDto) {
+        String customId = "PRES" + UUID.randomUUID().toString().substring(0,5);
+        prescriptionDto.setPrescriptionId(customId);
         return ResponseEntity.ok(prescriptionService.createPrescription(prescriptionDto));
     }
 
@@ -157,5 +141,8 @@ public class DoctorController {
     public ResponseEntity<List<PrescriptionDto>> getPrescriptionsByDoctor(@PathVariable String doctorId) {
         return ResponseEntity.ok(prescriptionService.getPrescriptionsByDoctor(doctorId));
     }
-
+    @PutMapping("/{patientId}/remove-doctor")
+    public ResponseEntity<String> removeDoctorFromPatient(@PathVariable String patientId) {
+        return ResponseEntity.ok(patientService.removeDoctorFromPatient(patientId));
+    }
 }

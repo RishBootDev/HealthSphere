@@ -13,10 +13,7 @@ public class TestService {
     private final FabricGatewayService fabricGatewayService;
 
     private Contract getTestContract() throws Exception {
-        // Access "Test Contract" from the chaincode "healthsphere"
         return fabricGatewayService.getContract( "TestContract");
-        // ⚠️ Note: The second argument must match the @Contract(name="...") in your chaincode.
-        // If your chaincode uses @Contract(name="Test Contract") with a space, use that exact string.
     }
 
     public String ping() {

@@ -11,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/lab")
@@ -23,22 +24,15 @@ public class LabDiagnosticsController {
     private final PatientService patientService;
 
 
-    @PostMapping
-    public ResponseEntity<String> createLab(@RequestBody LabDto labDto) {
-        return ResponseEntity.ok(labService.createLab(labDto));
-    }
-
-    @GetMapping("/{labId}")
+    @GetMapping("/getLab/{labId}")
     public ResponseEntity<LabDto> getLab(@PathVariable String labId) {
         return ResponseEntity.ok(labService.readLab(labId));
     }
 
-    @PutMapping("/{labId}")
+    @PutMapping("/updateLab/{labId}")
     public ResponseEntity<LabDto> updateLab(@PathVariable String labId, @RequestParam String newName) {
         return ResponseEntity.ok(labService.updateLab(labId, newName));
     }
-
-
 
     @PostMapping("/hospital/{hospitalId}/add/{labId}")
     public ResponseEntity<String> addLabToHospital(@PathVariable String hospitalId, @PathVariable String labId) {
@@ -46,30 +40,28 @@ public class LabDiagnosticsController {
     }
 
 
-    @PostMapping("/reports")
+    @PostMapping("/createLabReport")
     public ResponseEntity<LabReportDto> createLabReport(@RequestBody LabReportDto reportDto) {
+        String customId = "REP" + UUID.randomUUID().toString().substring(0,5);
+        reportDto.setReportId(customId);
         return ResponseEntity.ok(labService.createLabReport(reportDto));
     }
 
-    @GetMapping("/reports/{reportId}")
+    @GetMapping("/labReport/{reportId}")
     public ResponseEntity<LabReportDto> getLabReport(@PathVariable String reportId) {
         return ResponseEntity.ok(labService.readLabReport(reportId));
     }
 
-    @PutMapping("/reports")
+    @PutMapping("/updateReport")
     public ResponseEntity<LabReportDto> updateLabReport(@RequestBody LabReportDto reportDto) {
         return ResponseEntity.ok(labService.updateLabReport(reportDto));
     }
 
-    @DeleteMapping("/reports/{reportId}")
+    @DeleteMapping("/deleteReport/{reportId}")
     public ResponseEntity<String> deleteLabReport(@PathVariable String reportId) {
         return ResponseEntity.ok(labService.deleteLabReport(reportId));
     }
 
-    @GetMapping("/reports")
-    public ResponseEntity<List<LabReportDto>> getAllLabReports() {
-        return ResponseEntity.ok(labService.getAllLabReports());
-    }
 
     @GetMapping("/reports/patient/{patientId}")
     public ResponseEntity<List<LabReportDto>> getReportsByPatient(@PathVariable String patientId) {
@@ -89,6 +81,5 @@ public class LabDiagnosticsController {
     public ResponseEntity<String> unlinkReportFromPatient(@PathVariable String patientId) {
         return ResponseEntity.ok(patientService.unlinkReportFromPatient(patientId));
     }
-
 }
 

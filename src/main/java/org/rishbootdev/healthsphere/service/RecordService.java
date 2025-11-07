@@ -2,8 +2,6 @@ package org.rishbootdev.healthsphere.service;
 
 import lombok.RequiredArgsConstructor;
 import org.hyperledger.fabric.client.Contract;
-import org.rishbootdev.healthsphere.dto.PatientDto;
-import org.rishbootdev.healthsphere.dto.PrescriptionDto;
 import org.rishbootdev.healthsphere.dto.RecordDto;
 import org.rishbootdev.healthsphere.exception.ChainCodeException;
 import org.rishbootdev.healthsphere.exception.LedgerAccessException;
@@ -60,50 +58,18 @@ public class RecordService {
         try {
             Contract contract =getRecordContract();
             byte[] result = contract.evaluateTransaction("getAllRecords");
-            return JsonUtils.fromJsonList(new String(result), RecordDto.class);
+            return JsonUtils.fromJsonList(new String(result,StandardCharsets.UTF_8), RecordDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Failed to fetch records: " + e.getMessage());
         }
     }
-
-    public List<PatientDto> getPatients() {
-        try {
-            Contract contract = fabricGatewayService.getContract();
-            byte[] result = contract.evaluateTransaction("getPatients");
-            return JsonUtils.fromJsonList(new String(result), PatientDto.class);
-        } catch (Exception e) {
-            throw new LedgerAccessException("Failed to fetch patients: " + e.getMessage());
-        }
-    }
-
     public List<RecordDto> searchRecords(String keyword) {
         try {
             Contract contract = fabricGatewayService.getContract();
             byte[] result = contract.evaluateTransaction("searchRecords", keyword);
-            return JsonUtils.fromJsonList(new String(result), RecordDto.class);
+            return JsonUtils.fromJsonList(new String(result,StandardCharsets.UTF_8), RecordDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Failed to search records: " + e.getMessage());
-        }
-    }
-
-    public List<PrescriptionDto> getPrescriptionsByPatient(String patientId) {
-        try {
-            Contract contract = fabricGatewayService.getContract();
-            byte[] result = contract.evaluateTransaction("getPrescriptionsByPatient", patientId);
-            return JsonUtils.fromJsonList(new String(result, StandardCharsets.UTF_8), PrescriptionDto.class);
-        } catch (Exception e) {
-            throw new LedgerAccessException("Failed to fetch prescriptions: " + e.getMessage());
-        }
-    }
-
-    public String uploadPrescription(PrescriptionDto prescription) {
-        try {
-            Contract contract = fabricGatewayService.getContract();
-            String presJson = JsonUtils.toJson(prescription);
-            contract.submitTransaction("uploadPrescription", presJson);
-            return "Prescription uploaded for patient ID: " + prescription.getPatientId();
-        } catch (Exception e) {
-            throw new ChainCodeException("Failed to upload prescription: " + e.getMessage());
         }
     }
 }

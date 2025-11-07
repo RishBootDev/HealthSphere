@@ -1,6 +1,5 @@
 package org.rishbootdev.healthsphere.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.hyperledger.fabric.client.Contract;
 import org.rishbootdev.healthsphere.dto.*;
@@ -57,7 +56,7 @@ public class DoctorService {
 
     public DoctorDto getDoctorById(String doctorId) {
         try {
-            Contract contract = fabricGatewayService.getContract("DoctorContract");
+            Contract contract = getDoctorContract();
             byte[] result = contract.evaluateTransaction("getDoctorById", doctorId);
 
             String json = new String(result, StandardCharsets.UTF_8);
@@ -94,7 +93,7 @@ public class DoctorService {
         try {
             Contract contract = getDoctorContract();
             byte[] result = contract.evaluateTransaction("getAllDoctorsFast");
-            return JsonUtils.fromJsonList(new String(result), DoctorDto.class);
+            return JsonUtils.fromJsonList(new String(result,StandardCharsets.UTF_8), DoctorDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Error fetching all doctors: " + e.getMessage());
         }
@@ -104,7 +103,7 @@ public class DoctorService {
         try {
             Contract contract = getDoctorContract();
             byte[] result = contract.evaluateTransaction("GetPatientsByDoctorFast", doctorId);
-            return JsonUtils.fromJsonList(new String(result), PatientDto.class);
+            return JsonUtils.fromJsonList(new String(result,StandardCharsets.UTF_8), PatientDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Error fetching patients for doctor: " + e.getMessage());
         }
@@ -114,7 +113,7 @@ public class DoctorService {
         try {
             Contract contract = getDoctorContract();
             byte[] result = contract.evaluateTransaction("GetRecordsByDoctorFast", doctorId);
-            return JsonUtils.fromJsonList(new String(result), RecordDto.class);
+            return JsonUtils.fromJsonList(new String(result,StandardCharsets.UTF_8), RecordDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Error fetching records for doctor: " + e.getMessage());
         }
@@ -122,7 +121,7 @@ public class DoctorService {
 
     public String addPatientToDoctor(String doctorId, String patientId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getDoctorContract();
             contract.submitTransaction("addPatientToDoctor", doctorId, patientId);
             return "Patient " + patientId + " added to doctor " + doctorId;
         } catch (Exception e) {
@@ -132,7 +131,7 @@ public class DoctorService {
 
     public String removePatientFromDoctor(String doctorId, String patientId) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getDoctorContract();
             contract.submitTransaction("removePatientFromDoctor", doctorId, patientId);
             return "Patient " + patientId + " removed from doctor " + doctorId;
         } catch (Exception e) {
@@ -163,7 +162,7 @@ public class DoctorService {
     public RecordDto createRecord(RecordDto record) {
         try {
             Contract contract =getDoctorContract();
-            record.setRecordId("REC001");
+         //   record.setRecordId("REC001");
             String recordJson = JsonUtils.toJson(record);
             System.out.println(recordJson);
             contract.submitTransaction("createPatientRecord", recordJson);
@@ -177,7 +176,7 @@ public class DoctorService {
         try {
             Contract contract = getDoctorContract();
             byte[] result = contract.evaluateTransaction("getPatientsByDoctor", doctorId);
-            return JsonUtils.fromJsonList(new String(result), PatientDto.class);
+            return JsonUtils.fromJsonList(new String(result,StandardCharsets.UTF_8), PatientDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Error fetching patients: " + e.getMessage());
         }
@@ -187,7 +186,7 @@ public class DoctorService {
         try {
             Contract contract = getDoctorContract();
             byte[] result = contract.evaluateTransaction("searchRecords", keyword);
-            return JsonUtils.fromJsonList(new String(result), RecordDto.class);
+            return JsonUtils.fromJsonList(new String(result,StandardCharsets.UTF_8), RecordDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Failed to search records: " + e.getMessage());
         }
@@ -197,7 +196,7 @@ public class DoctorService {
         try {
             Contract contract = getDoctorContract();
             byte[] result = contract.evaluateTransaction("getPatients");
-            return JsonUtils.fromJsonList(new String(result), PatientDto.class);
+            return JsonUtils.fromJsonList(new String(result,StandardCharsets.UTF_8), PatientDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Unable to fetch patients: " + e.getMessage());
         }
@@ -207,7 +206,7 @@ public class DoctorService {
         try {
             Contract contract = getDoctorContract();
             byte[] result = contract.evaluateTransaction("getPrescriptionsByPatient", patientId);
-            return JsonUtils.fromJsonList(new String(result), PrescriptionDto.class);
+            return JsonUtils.fromJsonList(new String(result,StandardCharsets.UTF_8), PrescriptionDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Error fetching prescriptions: " + e.getMessage());
         }

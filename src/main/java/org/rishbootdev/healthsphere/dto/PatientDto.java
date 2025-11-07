@@ -1,6 +1,5 @@
 package org.rishbootdev.healthsphere.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,13 +22,9 @@ public class PatientDto {
     private String bloodGroup;
     private String allergies;
 
-    @JsonIgnore
     private List<String> prescriptionIds;
-    @JsonIgnore
     private List<String> recordIds;
-    @JsonIgnore
     private String doctorId;
-    @JsonIgnore
     private String hospitalId;
 }
 

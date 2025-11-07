@@ -9,6 +9,7 @@ import org.rishbootdev.healthsphere.exception.LedgerAccessException;
 import org.rishbootdev.healthsphere.utility.JsonUtils;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
@@ -26,7 +27,7 @@ public class PrescriptionService {
             Contract contract = getPrescriptionContract();
             String prescriptionJson = JsonUtils.toJson(prescription);
             byte[] result = contract.submitTransaction("createPrescription", prescriptionJson);
-            return new String(result);
+            return new String(result,StandardCharsets.UTF_8);
         } catch (Exception e) {
             throw new ChainCodeException("Failed to create prescription: " + e.getMessage());
         }
@@ -36,7 +37,7 @@ public class PrescriptionService {
         try {
             Contract contract = getPrescriptionContract();
             byte[] result = contract.evaluateTransaction("getPrescriptionById", prescriptionId);
-            return JsonUtils.fromJson(new String(result), PrescriptionDto.class);
+            return JsonUtils.fromJson(new String(result,StandardCharsets.UTF_8), PrescriptionDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Error retrieving prescription: " + e.getMessage());
         }
@@ -46,7 +47,7 @@ public class PrescriptionService {
         try {
             Contract contract =getPrescriptionContract();
             byte[] result = contract.evaluateTransaction("getAllPrescriptions");
-            return JsonUtils.fromJsonList(new String(result), PrescriptionDto.class);
+            return JsonUtils.fromJsonList(new String(result,StandardCharsets.UTF_8), PrescriptionDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Error fetching all prescriptions: " + e.getMessage());
         }
@@ -58,7 +59,7 @@ public class PrescriptionService {
             Contract contract = getPrescriptionContract();
             String prescriptionJson = JsonUtils.toJson(prescription);
             byte[] result = contract.submitTransaction("updatePrescription", prescriptionJson);
-            return new String(result);
+            return new String(result,StandardCharsets.UTF_8);
         } catch (Exception e) {
             throw new ChainCodeException("Failed to update prescription: " + e.getMessage());
         }
@@ -68,7 +69,7 @@ public class PrescriptionService {
         try {
             Contract contract = getPrescriptionContract();
             byte[] result = contract.submitTransaction("deletePrescription", prescriptionId);
-            return new String(result);
+            return new String(result,StandardCharsets.UTF_8);
         } catch (Exception e) {
             throw new ChainCodeException("Failed to delete prescription: " + e.getMessage());
         }
@@ -97,7 +98,7 @@ public class PrescriptionService {
         try {
             Contract contract =getPrescriptionContract();
             byte[] result = contract.evaluateTransaction("getMedicinesForPrescription", prescriptionId);
-            return JsonUtils.fromJsonList(new String(result), MedicineDto.class);
+            return JsonUtils.fromJsonList(new String(result,StandardCharsets.UTF_8), MedicineDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Error fetching medicines for prescription: " + e.getMessage());
         }
@@ -108,7 +109,7 @@ public class PrescriptionService {
         try {
             Contract contract = getPrescriptionContract();
             byte[] result = contract.evaluateTransaction("getPrescriptionsByPatient", patientId);
-            return JsonUtils.fromJsonList(new String(result), PrescriptionDto.class);
+            return JsonUtils.fromJsonList(new String(result,StandardCharsets.UTF_8), PrescriptionDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Error fetching prescriptions by patient: " + e.getMessage());
         }
@@ -118,7 +119,7 @@ public class PrescriptionService {
         try {
             Contract contract = getPrescriptionContract();
             byte[] result = contract.evaluateTransaction("getPrescriptionsByDoctor", doctorId);
-            return JsonUtils.fromJsonList(new String(result), PrescriptionDto.class);
+            return JsonUtils.fromJsonList(new String(result,StandardCharsets.UTF_8), PrescriptionDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Error fetching prescriptions by doctor: " + e.getMessage());
         }
@@ -128,7 +129,7 @@ public class PrescriptionService {
         try {
             Contract contract = getPrescriptionContract();
             byte[] result = contract.evaluateTransaction("searchPrescriptions", keyword);
-            return JsonUtils.fromJsonList(new String(result), PrescriptionDto.class);
+            return JsonUtils.fromJsonList(new String(result, StandardCharsets.UTF_8), PrescriptionDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Error searching prescriptions: " + e.getMessage());
         }

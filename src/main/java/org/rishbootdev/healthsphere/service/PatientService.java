@@ -9,6 +9,7 @@ import org.rishbootdev.healthsphere.exception.LedgerAccessException;
 import org.rishbootdev.healthsphere.utility.JsonUtils;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
@@ -32,19 +33,15 @@ public class PatientService {
             throw new ChainCodeException("Failed to create patient: " + e.getMessage());
         }
     }
-
-    // Retrieve a single patient
     public PatientDto getPatient(String patientId) {
         try {
             Contract contract = getPatientContract();
             byte[] result = contract.evaluateTransaction("getPatient", patientId);
-            return JsonUtils.fromJson(new String(result), PatientDto.class);
+            return JsonUtils.fromJson(new String(result,StandardCharsets.UTF_8), PatientDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Error retrieving patient: " + e.getMessage());
         }
     }
-
-    //  Update patient record
     public PatientDto updatePatient(PatientDto patient) {
         try {
             Contract contract = getPatientContract();
@@ -56,7 +53,6 @@ public class PatientService {
         }
     }
 
-    //  Delete a patient and their reports
     public String deletePatient(String patientId) {
         try {
             Contract contract = getPatientContract();
@@ -66,19 +62,16 @@ public class PatientService {
             throw new ChainCodeException("Failed to delete patient: " + e.getMessage());
         }
     }
-
-    //  Get all patients
     public List<PatientDto> getAllPatients() {
         try {
             Contract contract = getPatientContract();
             byte[] result = contract.evaluateTransaction("getAllPatients");
-            return JsonUtils.fromJsonList(new String(result), PatientDto.class);
+            return JsonUtils.fromJsonList(new String(result,StandardCharsets.UTF_8), PatientDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Error fetching all patients: " + e.getMessage());
         }
     }
 
-    //  Assign a doctor to a patient
     public String assignDoctorToPatient(String patientId, String doctorId) {
         try {
             Contract contract = getPatientContract();
@@ -89,7 +82,6 @@ public class PatientService {
         }
     }
 
-    //  Remove doctor from a patient
     public String removeDoctorFromPatient(String patientId) {
         try {
             Contract contract = getPatientContract();
@@ -99,8 +91,6 @@ public class PatientService {
             throw new ChainCodeException("Failed to remove doctor: " + e.getMessage());
         }
     }
-
-    //  Assign hospital to patient
     public String assignHospitalToPatient(String patientId, String hospitalId) {
         try {
             Contract contract = getPatientContract();
@@ -110,8 +100,6 @@ public class PatientService {
             throw new ChainCodeException("Failed to assign hospital: " + e.getMessage());
         }
     }
-
-    //  Remove hospital from patient
     public String removeHospitalFromPatient(String patientId) {
         try {
             Contract contract = getPatientContract();
@@ -145,7 +133,7 @@ public class PatientService {
         try {
             Contract contract = getPatientContract();
             byte[] result = contract.evaluateTransaction("getReportsByPatient", patientId);
-            return JsonUtils.fromJsonList(new String(result), LabReportDto.class);
+            return JsonUtils.fromJsonList(new String(result, StandardCharsets.UTF_8), LabReportDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Error fetching reports for patient: " + e.getMessage());
         }

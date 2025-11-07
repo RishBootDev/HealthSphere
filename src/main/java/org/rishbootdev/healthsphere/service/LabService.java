@@ -36,7 +36,7 @@ public class LabService {
         try {
             Contract contract = getLabContract();
             byte[] result = contract.evaluateTransaction("readLab", labId);
-            return JsonUtils.fromJson(new String(result), LabDto.class);
+            return JsonUtils.fromJson(new String(result,StandardCharsets.UTF_8), LabDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Unable to fetch lab details: " + e.getMessage());
         }
@@ -46,7 +46,7 @@ public class LabService {
         try {
             Contract contract = getLabContract();
             byte[] result = contract.submitTransaction("updateLab", labId, newName);
-            return JsonUtils.fromJson(new String(result), LabDto.class);
+            return JsonUtils.fromJson(new String(result,StandardCharsets.UTF_8), LabDto.class);
         } catch (Exception e) {
             throw new ChainCodeException("Failed to update lab: " + e.getMessage());
         }
@@ -66,7 +66,8 @@ public class LabService {
         try {
             Contract contract = getLabContract();
             byte[] result = contract.evaluateTransaction("getAllLabs");
-            return JsonUtils.fromJsonList(new String(result), LabDto.class);
+            System.out.println(new String(result,StandardCharsets.UTF_8));
+            return JsonUtils.fromJsonList(new String(result,StandardCharsets.UTF_8), LabDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Unable to retrieve all labs: " + e.getMessage());
         }
@@ -95,7 +96,7 @@ public class LabService {
         try {
             Contract contract = getLabContract();
             byte[] result = contract.evaluateTransaction("readLabReport", reportId);
-            return JsonUtils.fromJson(new String(result), LabReportDto.class);
+            return JsonUtils.fromJson(new String(result,StandardCharsets.UTF_8), LabReportDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Unable to read lab report: " + e.getMessage());
         }
@@ -112,7 +113,7 @@ public class LabService {
                     report.getTestDate(),
                     report.getRemarks()
             );
-            return JsonUtils.fromJson(new String(result), LabReportDto.class);
+            return JsonUtils.fromJson(new String(result,StandardCharsets.UTF_8), LabReportDto.class);
         } catch (Exception e) {
             throw new ChainCodeException("Failed to update lab report: " + e.getMessage());
         }
@@ -132,7 +133,7 @@ public class LabService {
         try {
             Contract contract = getLabContract();
             byte[] result = contract.evaluateTransaction("getAllLabReports");
-            return JsonUtils.fromJsonList(new String(result), LabReportDto.class);
+            return JsonUtils.fromJsonList(new String(result,StandardCharsets.UTF_8), LabReportDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Unable to retrieve lab reports: " + e.getMessage());
         }
