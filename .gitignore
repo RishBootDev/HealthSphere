@@ -33,5 +33,6 @@ build/
 .vscode/
 
 
+
 # Ignore Spring Boot configuration
 src/main/resources/application.properties
