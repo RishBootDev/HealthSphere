@@ -3,6 +3,7 @@ package org.rishbootdev.healthsphere.controller;
 import lombok.RequiredArgsConstructor;
 import org.rishbootdev.healthsphere.dto.*;
 import org.rishbootdev.healthsphere.service.*;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +19,11 @@ import java.util.List;
 public class PatientController {
 
     private final PatientService patientService;
+    private final RecordService recordService;
     private final LabService labService;
     private final PrescriptionService prescriptionService;
     private final AiService aiService;
+    private final DoctorService doctorService;
 
     @GetMapping("/getPatient/{patientId}")
     public ResponseEntity<PatientDto> getPatient(@PathVariable String patientId) {
@@ -47,23 +50,13 @@ public class PatientController {
         return ResponseEntity.ok(labService.readLabReport(reportId));
     }
 
-    @GetMapping("/chat/{query}")
-    public ResponseEntity<Flux<String>> getResponseFromAI(@PathVariable String query) {
-        return ResponseEntity.ok(aiService.getResponseForPatient(query));
+    @GetMapping(value = "/chat/{query}")
+    public String getResponseFromAI(@PathVariable String query) {
+        return aiService.getResponseForPatient(query).toString();
     }
 
     @GetMapping("/getPrescriptions/{patientId}")
     public ResponseEntity<List<PrescriptionDto>> getPrescriptionsForPatient(@PathVariable String patientId) {
         return ResponseEntity.ok(prescriptionService.getPrescriptionsByPatient(patientId));
-    }
-
-    @GetMapping("/{patientId}/records")
-    public ResponseEntity<List<RecordDto>> getRecordsByPatient(@PathVariable String patientId) {
-        return ResponseEntity.ok(null);
-    }
-
-    @GetMapping("/record/{patientId}")
-    public ResponseEntity<List<RecordDto>> getRecordsAlias(@PathVariable String patientId) {
-        return ResponseEntity.ok(null);
     }
 }

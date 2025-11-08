@@ -33,11 +33,12 @@ public class AuthService {
         User user = userRepository.findUserByEmail(request.getEmail())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash()) || request.getRole()!=user.getRole()) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash()) ) {
             throw new RuntimeException("Invalid credentials");
         }
 
         String token = jwtService.generateToken(user);
+       // Cookie ck=new Cookie("token",token);
         return new LoginResponse(token,user.getUserId(),user.getRole());
     }
 

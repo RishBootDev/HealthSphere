@@ -10,6 +10,7 @@ import org.rishbootdev.healthsphere.utility.JsonUtils;
 import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -132,7 +133,9 @@ public class LabService {
     public List<LabReportDto> getAllLabReports() {
         try {
             Contract contract = getLabContract();
+            System.out.println("dfhjsk++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             byte[] result = contract.evaluateTransaction("getAllLabReports");
+            System.out.println(Arrays.toString(result));
             return JsonUtils.fromJsonList(new String(result,StandardCharsets.UTF_8), LabReportDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Unable to retrieve lab reports: " + e.getMessage());

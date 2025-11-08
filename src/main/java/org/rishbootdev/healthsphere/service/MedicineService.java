@@ -19,11 +19,14 @@ public class MedicineService {
     private final FabricGatewayService fabricGatewayService;
 
     private Contract getMedicineContract(){
-        return fabricGatewayService.getContract("LabContract");
+        return fabricGatewayService.getContract("MedicineContract");
     }
 
 
     public MedicineDto createMedicine(MedicineDto medicine) {
+        System.out.println(medicine.getName());
+        System.out.println(medicine.getDosage());
+        System.out.println(medicine.getManufacturer());
         try {
             Contract contract= getMedicineContract();
             String medicineJson = JsonUtils.toJson(medicine);
@@ -79,6 +82,7 @@ public class MedicineService {
         try {
             Contract contract =getMedicineContract();
             byte[] result = contract.evaluateTransaction("searchMedicineByName", name);
+            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             return JsonUtils.fromJsonList(new String(result,StandardCharsets.UTF_8), MedicineDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Error searching medicine: " + e.getMessage());

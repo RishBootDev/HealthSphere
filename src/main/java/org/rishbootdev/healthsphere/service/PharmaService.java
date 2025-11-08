@@ -36,7 +36,7 @@ public class PharmaService {
     public List<PharmaDto> getAllPharmas(){
         try {
             Contract contract = getPharmaContract();
-            byte[] result = contract.evaluateTransaction("getAllPharmsa");
+            byte[] result = contract.evaluateTransaction("getAllPharmas");
             return JsonUtils.fromJsonList(new String(result,StandardCharsets.UTF_8), PharmaDto.class);
         } catch (Exception e) {
             throw new LedgerAccessException("Unable to fetch all medicines: " + e.getMessage());
@@ -122,6 +122,7 @@ public class PharmaService {
         try {
             Contract contract = getPharmaContract();
             byte[] result = contract.submitTransaction("addMedicineToPharma", pharmaId, medicineId);
+            System.out.println("medicine added");
             return JsonUtils.fromJson(new String(result,StandardCharsets.UTF_8), PharmaDto.class);
         } catch (Exception e) {
             throw new ChainCodeException("Failed to add medicine to pharma: " + e.getMessage());

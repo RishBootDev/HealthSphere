@@ -30,13 +30,13 @@ public class PharmaController {
 
 
     @GetMapping("/getPharma/{pharmaId}")
-    public ResponseEntity<PharmaDto> getPharmaById(String pharmaId){
+    public ResponseEntity<PharmaDto> getPharmaById(@PathVariable String pharmaId){
         return ResponseEntity.ok(pharmaService.getPharma(pharmaId));
     }
 
-    @GetMapping("/medicines/{name}")
-    public ResponseEntity<?> searchMedicines(@PathVariable String name) {
-        return ResponseEntity.ok(pharmaService.searchMedicineByName(name));
+    @GetMapping("/medicines/{id}")
+    public ResponseEntity<?> searchMedicines(@PathVariable String id) {
+        return ResponseEntity.ok(medicineService.readMedicine(id));
     }
 
 
@@ -47,8 +47,8 @@ public class PharmaController {
 
 
     @GetMapping("/searchMedicine")
-    public ResponseEntity<List<MedicineDto>> searchMedicineByName(@RequestParam String name) {
-        return ResponseEntity.ok(medicineService.searchMedicineByName(name));
+    public ResponseEntity<MedicineDto> searchMedicineByName(@RequestParam String medicineId) {
+        return ResponseEntity.ok(medicineService.readMedicine(medicineId));
     }
 
     @PutMapping("/{medicineId}/stock")
@@ -79,7 +79,7 @@ public class PharmaController {
     }
     @GetMapping("/prescription/{patientId}")
     public ResponseEntity<PrescriptionDto> getPrescriptionByPatient(@PathVariable String patientId) {
-        return ResponseEntity.ok(pharmaService.getPrescriptionByPatient(patientId));
+        return ResponseEntity.ok(prescriptionService.getPrescriptionById(patientId));
     }
 
 
