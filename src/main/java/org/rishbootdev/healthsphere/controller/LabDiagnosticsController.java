@@ -65,7 +65,7 @@ public class LabDiagnosticsController {
 
     @GetMapping("/reports/patient/{patientId}")
     public ResponseEntity<List<LabReportDto>> getReportsByPatient(@PathVariable String patientId) {
-        return ResponseEntity.ok(labService.getReportsByPatient(patientId));
+        return ResponseEntity.ok(patientService.getReportsByPatient(patientId));
     }
 
     @PostMapping("/{labId}/add-report/{reportId}")

@@ -28,18 +28,14 @@ public class AiService {
 
     }
 
-    public Flux<String> getResponseForPharmaCist(String query){
+    public String getResponseForPharmaCist(String query){
         String prompt = "You are a highly experienced Medicine and HealthCare specialist who have the complete knowledge of each and every diseases and every medicine associated with the cure "
                 + "I have a query: " + query
                 + " Provide relevant details regarding type of medications, care and pharma related stuffs.Output should be text only and not more than 200 words";
 
         return chatClient.prompt(prompt)
-                .stream()
-                .content()
-                .flatMap(str -> Flux.fromIterable(()->str.chars()
-                        .mapToObj(c->String.valueOf((char)c))
-                        .iterator()))
-                .concatMap(ch -> Mono.just(ch)
-                        .delayElement(Duration.ofMillis(10)));
+                .call()
+                .content();
+
     }
 }

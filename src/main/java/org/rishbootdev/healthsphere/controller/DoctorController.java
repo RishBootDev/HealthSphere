@@ -50,9 +50,9 @@ public class DoctorController {
     }
 
 
-    @GetMapping("/records/search")
-    public ResponseEntity<List<RecordDto>> searchRecords(@RequestParam String keyword) {
-        return ResponseEntity.ok(doctorService.searchRecords(keyword));
+    @GetMapping("/records/search/{id}")
+    public ResponseEntity<List<RecordDto>> searchRecords(@PathVariable String id) {
+        return ResponseEntity.ok(doctorService.getRecordsByDoctor(id));
     }
 
     @GetMapping("/getDoctor/{doctorId}")

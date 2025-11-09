@@ -47,8 +47,8 @@ public class PharmaController {
 
 
     @GetMapping("/searchMedicine")
-    public ResponseEntity<MedicineDto> searchMedicineByName(@RequestParam String medicineId) {
-        return ResponseEntity.ok(medicineService.readMedicine(medicineId));
+    public ResponseEntity<MedicineDto> searchMedicineByName(@RequestParam String name) {
+        return ResponseEntity.ok(medicineService.readMedicine(name));
     }
 
     @PutMapping("/{medicineId}/stock")
@@ -88,9 +88,12 @@ public class PharmaController {
         return ResponseEntity.ok(prescriptionService.getMedicinesForPrescription(prescriptionId));
     }
 
-    @GetMapping("/chat/{query}")
-    public ResponseEntity<Flux<String>> getResponseFromAI(@PathVariable String query){
-        return ResponseEntity.ok(aiService.getResponseForPharmaCist(query));
+    @GetMapping(
+            value = "/chat/{query}"
+    )
+    public String getResponseFromAI(@PathVariable String query) {
+        return aiService.getResponseForPharmaCist(query);
     }
+
 }
 
