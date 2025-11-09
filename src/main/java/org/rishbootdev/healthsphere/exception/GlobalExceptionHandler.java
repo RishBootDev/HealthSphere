@@ -40,7 +40,7 @@ public class GlobalExceptionHandler {
         logger.error("ChainCodeException: {}", ex.getMessage(), ex);
         return buildErrorResponse(
                 "There was a problem executing the blockchain transaction. Please try again later.",
-                ex, request, HttpStatus.INTERNAL_SERVER_ERROR, ex.getErrorCode());
+                ex, request, HttpStatus.NOT_FOUND, ex.getErrorCode());
     }
 
     @ExceptionHandler(LedgerAccessException.class)

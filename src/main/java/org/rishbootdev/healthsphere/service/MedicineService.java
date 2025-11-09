@@ -22,7 +22,6 @@ public class MedicineService {
         return fabricGatewayService.getContract("MedicineContract");
     }
 
-
     public MedicineDto createMedicine(MedicineDto medicine) {
         System.out.println(medicine.getName());
         System.out.println(medicine.getDosage());

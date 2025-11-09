@@ -157,7 +157,7 @@ public class HospitalService {
 
     public List<LabDto> getAllLabs() {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getHospitalContract();
             byte[] result = contract.evaluateTransaction("getAllLabs");
             return JsonUtils.fromJsonList(new String(result,StandardCharsets.UTF_8), LabDto.class);
         } catch (Exception e) {

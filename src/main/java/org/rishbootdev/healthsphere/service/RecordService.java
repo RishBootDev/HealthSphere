@@ -65,7 +65,7 @@ public class RecordService {
     }
     public List<RecordDto> searchRecords(String keyword) {
         try {
-            Contract contract = fabricGatewayService.getContract();
+            Contract contract = getRecordContract();
             byte[] result = contract.evaluateTransaction("searchRecords", keyword);
             return JsonUtils.fromJsonList(new String(result,StandardCharsets.UTF_8), RecordDto.class);
         } catch (Exception e) {

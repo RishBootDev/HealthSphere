@@ -122,4 +122,5 @@ public class HospitalController {
     public ResponseEntity<String> removeHospitalFromPatient(@PathVariable String patientId) {
         return ResponseEntity.ok(patientService.removeHospitalFromPatient(patientId));
     }
+
 }
