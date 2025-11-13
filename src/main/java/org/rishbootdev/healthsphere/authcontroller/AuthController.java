@@ -4,11 +4,9 @@ package org.rishbootdev.healthsphere.authcontroller;
 import lombok.RequiredArgsConstructor;
 import org.rishbootdev.healthsphere.authorizationDto.LoginRequest;
 import org.rishbootdev.healthsphere.authorizationDto.LoginResponse;
-import org.rishbootdev.healthsphere.authorizationModels.Role;
 import org.rishbootdev.healthsphere.authorizationService.AuthService;
 import org.rishbootdev.healthsphere.dto.*;
 import org.rishbootdev.healthsphere.service.PharmaService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
