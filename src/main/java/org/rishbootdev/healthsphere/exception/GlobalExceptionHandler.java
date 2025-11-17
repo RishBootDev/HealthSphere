@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
@@ -25,6 +24,7 @@ public class GlobalExceptionHandler {
                 userMessage,
                 request.getDescription(false)
         );
+
         return new ResponseEntity<>(errorResponse, status);
     }
 
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
         logger.error("ChainCodeException: {}", ex.getMessage(), ex);
         return buildErrorResponse(
                 "There was a problem executing the blockchain transaction. Please try again later.",
-                ex, request, HttpStatus.NOT_FOUND, ex.getErrorCode());
+                ex, request, HttpStatus.BAD_REQUEST, ex.getErrorCode());
     }
 
     @ExceptionHandler(LedgerAccessException.class)
