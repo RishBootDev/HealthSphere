@@ -9,9 +9,5 @@ public class HealthSphereApplication {
     public static void main(String[] args) {
         SpringApplication.run(HealthSphereApplication.class, args);
 
-//        BCryptPasswordEncoder encoder=new BCryptPasswordEncoder();
-//        String hashed=encoder.encode("abcdefg");
-//        System.out.println(hashed);
     }
-
 }

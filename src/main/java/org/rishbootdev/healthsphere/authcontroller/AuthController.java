@@ -6,7 +6,6 @@ import org.rishbootdev.healthsphere.authorizationDto.LoginRequest;
 import org.rishbootdev.healthsphere.authorizationDto.LoginResponse;
 import org.rishbootdev.healthsphere.authorizationService.AuthService;
 import org.rishbootdev.healthsphere.dto.*;
-import org.rishbootdev.healthsphere.service.PharmaService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,17 +17,14 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
-    private final PharmaService pharmaService;
 
     @PostMapping("/doctor/login")
     public ResponseEntity<LoginResponse> doctorLogin(@RequestBody LoginRequest request) {
-        //if(request.getRole()!=Role.DOCTOR) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return ResponseEntity.ok(authService.login(request));
     }
 
     @PostMapping("/hospital/login")
     public ResponseEntity<LoginResponse> hospitalLogin(@RequestBody LoginRequest request) {
-      //  if(request.getRole()!=Role.HOSPITAL) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return ResponseEntity.ok(authService.login(request));
     }
 

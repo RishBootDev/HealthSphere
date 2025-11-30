@@ -37,7 +37,8 @@ public class SecurityConfiguration {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("api/test/**").permitAll()
+                        .requestMatchers("/api/test/**").permitAll()
+                        .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/api/doctor/**").hasRole("DOCTOR")
                         .requestMatchers("/api/hospital/**").hasRole("HOSPITAL")
                         .requestMatchers("/api/lab/**").hasRole("LAB")
@@ -45,7 +46,8 @@ public class SecurityConfiguration {
                         .requestMatchers("/api/pharma/**").hasRole("PHARMA")
                         .requestMatchers("api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

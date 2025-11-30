@@ -28,10 +28,8 @@ public class JwtService {
                 .setExpiration(new Date(System.currentTimeMillis() +1000*60*60)) // valid for 1 hour
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
-
         System.out.println(token);
         return token;
-
     }
 
     public boolean validateToken(String token) {
