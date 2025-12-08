@@ -30,24 +30,20 @@ public class AuthController {
 
     @PostMapping("/lab/login")
     public ResponseEntity<LoginResponse> labLogin(@RequestBody LoginRequest request) {
-       // if(request.getRole()!=Role.LAB) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return ResponseEntity.ok(authService.login(request));
     }
 
     @PostMapping("/pharma/login")
     public ResponseEntity<LoginResponse> pharmaLogin(@RequestBody LoginRequest request) {
-     //   if(request.getRole()!=Role.PHARMA) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return ResponseEntity.ok(authService.login(request));
     }
 
     @PostMapping("/patient/login")
     public ResponseEntity<LoginResponse> patientLogin(@RequestBody LoginRequest request) {
-     //   if(request.getRole()!=Role.PATIENT) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return ResponseEntity.ok(authService.login(request));
     }
     @PostMapping("/admin/login")
     public ResponseEntity<LoginResponse> adminLogin(@RequestBody LoginRequest request) {
-       // if(request.getRole()!=Role.ADMIN) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         return ResponseEntity.ok(authService.login(request));
     }
 

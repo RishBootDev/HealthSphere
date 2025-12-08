@@ -38,12 +38,11 @@ public class AuthService {
         }
 
         String token = jwtService.generateToken(user);
-       // Cookie ck=new Cookie("token",token);
         return new LoginResponse(token,user.getUserId(),user.getRole());
     }
 
     public void logout(String token) {
-        // stateless system hai but i will add this logic afterwards
+        // stateless system hai but i will add this logic afterwards.
     }
 
     @Transactional

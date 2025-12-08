@@ -7,7 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
+
 
 import java.util.List;
 
@@ -19,11 +19,9 @@ import java.util.List;
 public class PatientController {
 
     private final PatientService patientService;
-    private final RecordService recordService;
     private final LabService labService;
     private final PrescriptionService prescriptionService;
     private final AiService aiService;
-    private final DoctorService doctorService;
 
     @GetMapping("/getPatient/{patientId}")
     public ResponseEntity<PatientDto> getPatient(@PathVariable String patientId) {

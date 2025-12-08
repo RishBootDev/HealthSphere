@@ -1,6 +1,7 @@
 package org.rishbootdev.healthsphere.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.rishbootdev.healthsphere.authorizationModels.User;
 import org.rishbootdev.healthsphere.dto.*;
 import org.rishbootdev.healthsphere.service.DoctorService;
 import org.rishbootdev.healthsphere.service.PatientService;
@@ -8,6 +9,7 @@ import org.rishbootdev.healthsphere.service.PrescriptionService;
 import org.rishbootdev.healthsphere.service.RecordService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
@@ -57,6 +59,8 @@ public class DoctorController {
 
     @GetMapping("/getDoctor/{doctorId}")
     public ResponseEntity<DoctorDto> getDoctorById(@PathVariable String doctorId) {
+
+        // User user=(User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ResponseEntity.ok(doctorService.getDoctorById(doctorId));
     }
 
